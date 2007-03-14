@@ -1,0 +1,10 @@
+The DJ Project - Rediscover the Dekstop
+http://djproject.sourceforge.net
+Christopher Deckers (chrriis@nextencia.net)
+Licence terms: GPL v2 (see licence.txt)
+
+---------------------------------- Change log ----------------------------------
+
+* Version 1.001 (March 14, 2007):
+
+- Initial release, with possibility to adjust icons and manifest information.
