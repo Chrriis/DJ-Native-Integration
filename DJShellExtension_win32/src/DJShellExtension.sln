@@ -1,0 +1,32 @@
+
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DJShellExtension", "DJShellExtension\DJShellExtension.vcproj", "{ADB6D586-7258-43F6-95B6-1757B1B98262}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DJShellExtensionPS", "DJShellExtension\DJShellExtensionPS.vcproj", "{4A894C78-0970-4D6F-9ABE-45F47A44FD32}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ADB6D586-7258-43F6-95B6-1757B1B98262} = {ADB6D586-7258-43F6-95B6-1757B1B98262}
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DJSetup", "DJSetup\DJSetup.vdproj", "{C7593215-10CC-4FA0-9601-53E7E8C68F13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADB6D586-7258-43F6-95B6-1757B1B98262}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ADB6D586-7258-43F6-95B6-1757B1B98262}.Debug|Win32.Build.0 = Debug|Win32
+		{ADB6D586-7258-43F6-95B6-1757B1B98262}.Release|Win32.ActiveCfg = Release|Win32
+		{ADB6D586-7258-43F6-95B6-1757B1B98262}.Release|Win32.Build.0 = Release|Win32
+		{4A894C78-0970-4D6F-9ABE-45F47A44FD32}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4A894C78-0970-4D6F-9ABE-45F47A44FD32}.Release|Win32.ActiveCfg = Release|Win32
+		{C7593215-10CC-4FA0-9601-53E7E8C68F13}.Debug|Win32.ActiveCfg = Debug
+		{C7593215-10CC-4FA0-9601-53E7E8C68F13}.Release|Win32.ActiveCfg = Release
+		{C7593215-10CC-4FA0-9601-53E7E8C68F13}.Release|Win32.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

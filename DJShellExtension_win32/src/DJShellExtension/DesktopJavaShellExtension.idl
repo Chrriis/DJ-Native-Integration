@@ -1,0 +1,54 @@
+// DesktopJavaShellExtension.idl : IDL source for DesktopJavaShellExtension
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (DesktopJavaShellExtension.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(D3C84433-AA02-408D-8E25-5ACC78D5C530),
+	dual,
+	nonextensible,
+	helpstring("IIconHandler Interface"),
+	pointer_default(unique)
+]
+interface IIconHandler : IDispatch{
+};
+[
+	object,
+	uuid(86C3A15B-B302-4B5C-B698-3D9F712FA24E),
+	dual,
+	nonextensible,
+	helpstring("IPropertySheetHandler Interface"),
+	pointer_default(unique)
+]
+interface IPropertySheetHandler : IDispatch{
+};
+[
+	uuid(3A1ABF8B-EBA1-4DC8-A9A8-4371F3B599F8),
+	version(1.0),
+	helpstring("DesktopJavaShellExtension 1.0 Type Library")
+]
+library DesktopJavaShellExtensionLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(560F06E8-E0EF-4DD6-9733-5C2507132C57),
+		helpstring("IconHandler Class")
+	]
+	coclass IconHandler
+	{
+		[default] interface IIconHandler;
+	};
+	[
+		uuid(5EC050B4-7064-44B9-8D71-EC1A33DFB604),
+		helpstring("PropertySheetHandler Class")
+	]
+	coclass PropertySheetHandler
+	{
+		[default] interface IPropertySheetHandler;
+	};
+};

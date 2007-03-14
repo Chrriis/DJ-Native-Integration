@@ -1,0 +1,35 @@
+HKCR
+{
+	DJShellExtension.IconHandler.1 = s 'DJIconHandler'
+	{
+		CLSID = s '{560F06E8-E0EF-4DD6-9733-5C2507132C57}'
+	}
+	DJShellExtension.IconHandler = s 'DJIconHandler'
+	{
+		CLSID = s '{560F06E8-E0EF-4DD6-9733-5C2507132C57}'
+		CurVer = s 'DJShellExtension.IconHandler.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {560F06E8-E0EF-4DD6-9733-5C2507132C57} = s 'DJIconHandler'
+		{
+			ProgID = s 'DJShellExtension.IconHandler.1'
+			VersionIndependentProgID = s 'DJShellExtension.IconHandler'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{3A1ABF8B-EBA1-4DC8-A9A8-4371F3B599F8}'
+		}
+	}
+    NoRemove jarfile
+    {
+       NoRemove DefaultIcon = s '%%1'    
+       NoRemove ShellEx
+       {
+          ForceRemove IconHandler = s '{560F06E8-E0EF-4DD6-9733-5C2507132C57}'
+       }
+    }
+}

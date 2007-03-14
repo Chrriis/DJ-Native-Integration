@@ -1,0 +1,10 @@
+The DJ Project - Rediscover the Dekstop
+http://djproject.sourceforge.net
+Issam Chehab (issam.chehab at gmail dot com)
+Licence terms: GPL v2 (see licence.txt)
+
+---------------------------------- Change log ----------------------------------
+
+* Version 1.0.0.1 (March 14, 2007):
+
+- Initial release, which displays dynamic icons and manifest attributes.

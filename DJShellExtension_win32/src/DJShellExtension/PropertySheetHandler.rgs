@@ -1,0 +1,39 @@
+HKCR
+{
+	DJShellExtension.PropertySheet.1 = s 'DJPropertySheetHandler'
+	{
+		CLSID = s '{5EC050B4-7064-44B9-8D71-EC1A33DFB604}'
+	}
+	DJShellExtension.PropertySheet = s 'PropertySheetHandler Class'
+	{
+		CLSID = s '{5EC050B4-7064-44B9-8D71-EC1A33DFB604}'
+		CurVer = s 'DJShellExtension.PropertySheet.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {5EC050B4-7064-44B9-8D71-EC1A33DFB604} = s 'DJPropertySheetHandler'
+		{
+			ProgID = s 'DJShellExtension.PropertySheet.1'
+			VersionIndependentProgID = s 'DJShellExtension.PropertySheet'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{3A1ABF8B-EBA1-4DC8-A9A8-4371F3B599F8}'
+		}
+	}
+
+  NoRemove jarfile
+  {
+    NoRemove ShellEx
+    {
+      NoRemove PropertySheetHandlers
+      {
+        {5EC050B4-7064-44B9-8D71-EC1A33DFB604}
+      }
+    }
+  }
+
+}
