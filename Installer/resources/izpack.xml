@@ -59,15 +59,17 @@
     <pack name="Core" required="yes">
       <description>Base files.</description>
       <file src="resources/license.txt" targetdir="$INSTALL_PATH"/>
-      <file src="resources/DJ.ico" targetdir="$INSTALL_PATH"/>
+      <file src="resources/DJ.ico" targetdir="$INSTALL_PATH" os="windows"/>
     </pack>
     <pack name="DJ ShellExtension" required="no">
+      <os family="windows"/>
       <description>Extension that provides icon support and extended properties for Jar files.</description>
       <file src="../DJShellExtension_win32/Release/DJShellExtension.dll" targetdir="$INSTALL_PATH/DJ ShellExtension"/>
       <file src="../DJShellExtension_win32/Release/readme.txt" targetdir="$INSTALL_PATH/DJ ShellExtension"/>
       <file src="../DJShellExtension_win32/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ ShellExtension"/>
     </pack>
     <pack name="DJ JarExe" required="no">
+      <os family="windows"/>
       <description>Make executable Jar files different processes, identifiable in Windows task manager.</description>
       <file src="../DJJarExe_win32/Release/DJJarExe.jar" targetdir="$INSTALL_PATH/DJ JarExe"/>
       <file src="../DJJarExe_win32/Release/readme.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>
@@ -80,7 +82,9 @@
       <file src="../DJTweak/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>
     </pack>
   </packs>
-  <native type="izpack" name="ShellLink.dll"/>
+  <native type="izpack" name="ShellLink.dll">
+    <os family="windows"/>
+  </native>
   <native type="3rdparty" name="COIOSHelper.dll" stage="both">
     <os family="windows"/>
   </native>
