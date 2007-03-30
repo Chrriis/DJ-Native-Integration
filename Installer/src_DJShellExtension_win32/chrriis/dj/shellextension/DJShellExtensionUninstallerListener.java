@@ -7,8 +7,11 @@
  */
 package chrriis.dj.shellextension;
 
+import java.awt.Frame;
 import java.io.File;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import com.izforge.izpack.event.SimpleUninstallerListener;
 import com.izforge.izpack.util.AbstractUIProgressHandler;
@@ -20,6 +23,19 @@ import com.izforge.izpack.util.os.RegistryHandler;
  */
 public class DJShellExtensionUninstallerListener extends SimpleUninstallerListener {
 
+  @Override
+  public void afterDeletion(List files, AbstractUIProgressHandler handler) throws Exception {
+    if(!isShellExtensionInstalled) {
+      return;
+    }
+    Frame[] frames = Frame.getFrames();
+    if(frames.length > 0) {
+      JOptionPane.showMessageDialog(frames[0], "You will need to restart the computer after the uninstallation\nfor some changes to take effect.", "Restart needed", JOptionPane.INFORMATION_MESSAGE);
+    }
+  }
+  
+  protected boolean isShellExtensionInstalled;
+  
   public void beforeDeletion(List files, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
     RegistryHandler rh = RegistryDefaultHandler.getInstance();
     rh.setRoot(RegistryHandler.HKEY_CLASSES_ROOT);
@@ -36,19 +52,20 @@ public class DJShellExtensionUninstallerListener extends SimpleUninstallerListen
     rh.deleteKeyIfEmpty("jarfile\\ShellEx\\PropertySheetHandlers\\{5EC050B4-7064-44B9-8D71-EC1A33DFB604}");
     rh.deleteKeyIfEmpty("jarfile\\ShellEx\\PropertySheetHandlers");
     rh.deleteKeyIfEmpty("jarfile\\ShellEx");
+    // beforeDelete is not called by the installer, so let's call it explicitely (renamed to avoid problems in case it actually gets called...)
+    for(Object file: files) {
+      beforeDelete_((File)file, abstractUIProgressHandler);
+    }
   }
 
-  @Override
-  public void beforeDelete(File file, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+  /*@Override*/
+  public void beforeDelete_(File file, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
     if(!file.getName().equals("DJShellExtension.dll")) {
       return;
     }
+    isShellExtensionInstalled = true;
     Process process = new ProcessBuilder("regsvr32.exe", "/u", "/s", file.getAbsolutePath()).start();
     process.waitFor();
-    try {
-      Thread.sleep(500);
-    } catch(Exception e) {
-    }
     if(!file.delete()) {
       File tempFile = File.createTempFile("~DJ", ".DL_");
       tempFile.delete();

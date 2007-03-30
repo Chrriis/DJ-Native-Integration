@@ -7,7 +7,10 @@
  */
 package chrriis.dj.shellextension;
 
+import java.awt.Frame;
 import java.io.File;
+
+import javax.swing.JOptionPane;
 
 import com.izforge.izpack.Pack;
 import com.izforge.izpack.event.SimpleInstallerListener;
@@ -22,11 +25,24 @@ import com.izforge.izpack.util.os.RegistryHandler;
  */
 public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
 
+  public void afterPacks(AutomatedInstallData idata, AbstractUIProgressHandler handler) throws Exception {
+    if(!isInstallingShellExtension) {
+      return;
+    }
+    Frame[] frames = Frame.getFrames();
+    if(frames.length > 0) {
+      JOptionPane.showMessageDialog(frames[0], "You will need to restart the computer when the installation\nis complete for some changes to take effect.", "Restart needed", JOptionPane.INFORMATION_MESSAGE);
+    }
+  }
+
+  protected boolean isInstallingShellExtension;
+  
   @Override
   public void afterPack(Pack pack, Integer integer, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
     if(!"DJ ShellExtension".equals(pack.name)) {
       return;
     }
+    isInstallingShellExtension = true;
     RegistryHandler rh = RegistryDefaultHandler.getInstance();
     rh.setRoot(RegistryHandler.HKEY_CLASSES_ROOT);
     rh.setValue("jarfile\\DefaultIcon", "", "%1");
