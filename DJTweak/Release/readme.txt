@@ -50,7 +50,7 @@ the DJ Project's website.
 
 4. Sources?
 
-The sources are part of the distribution.
+The sources are part of the source distribution and on SourceForge.
 
 
 5. How to support?
