@@ -13,14 +13,14 @@ the content of the manifest file.
 Note that icons are shown for JAR files by the operating system only if the
 corresponding application from the DJ Project is installed.
 
-DJTweak requires Java 5.0 or greater.
+DJ Tweak requires Java 5.0 or greater.
 
 
 2. How to use it?
 
 Simply launch the graphical user interface.
 
-Alternatively, you can use DJTweak's Ant task. Here is an example:
+Alternatively, you can use DJ Tweak's Ant task. Here is an example:
 
 <project name="Sample build script" default="configureJar">
   <target name="configureJar" description="Configure the JAR file icons">
