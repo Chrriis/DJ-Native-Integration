@@ -50,7 +50,7 @@ public class DJShellExtensionUninstallerListener extends SimpleUninstallerListen
     } catch(Exception e) {
     }
     if(!file.delete()) {
-      File tempFile = File.createTempFile("~DJ", "DL_");
+      File tempFile = File.createTempFile("~DJ", ".DL_");
       tempFile.delete();
       file.renameTo(tempFile);
     }
