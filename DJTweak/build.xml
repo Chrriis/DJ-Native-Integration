@@ -1,16 +1,16 @@
 <project name="DJ build script" default="createJar">
 
 	<target name="createJar" description="Create the Jar file">
-		<delete file="DJLib.jar"/>
-		<delete file="DJTweak.jar"/>
-		<jar duplicate="preserve" destfile="DJLib.jar">
+		<delete file="Release/DJLib.jar"/>
+		<delete file="Release/DJTweak.jar"/>
+		<jar duplicate="preserve" destfile="Release/DJLib.jar">
 			<fileset dir="bin"/>
 			<manifest>
 				<attribute name="Main-Class" value="chrriis.dj.ui.DJFrame"/>
 			</manifest>
 		</jar>
-	  <taskdef resource="chrriis/dj/ant/task.properties" classpath="DJLib.jar"/>
-	  <dj file="DJLib.jar" tofile="DJTweak.jar">
+	  <taskdef resource="chrriis/dj/ant/task.properties" classpath="Release/DJLib.jar"/>
+	  <dj file="Release/DJLib.jar" tofile="Release/DJTweak.jar">
 	  	<icons>
 		  	<internalset>
 		  		<include name="chrriis/dj/ui/resource/DJTweak??x??.png"/>
