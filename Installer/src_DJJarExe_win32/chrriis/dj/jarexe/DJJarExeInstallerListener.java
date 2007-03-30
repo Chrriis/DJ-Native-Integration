@@ -23,14 +23,6 @@ import com.izforge.izpack.util.os.RegistryHandler;
  */
 public class DJJarExeInstallerListener extends SimpleInstallerListener {
 
-  protected String installPath;
-  
-  @Override
-  public void beforePacks(AutomatedInstallData automatedInstallData, Integer packCount, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
-    VariableSubstitutor substitutor = new VariableSubstitutor(automatedInstallData.getVariables());
-    installPath = substitutor.substitute("$INSTALL_PATH", null);
-  }
-
   @Override
   public void afterPack(Pack pack, Integer integer, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
     if(!"DJ JarExe".equals(pack.name)) {
@@ -47,6 +39,8 @@ public class DJJarExeInstallerListener extends SimpleInstallerListener {
         int index1 = stringData.indexOf(" -jar ");
         int index2 = stringData.indexOf(" \"%1\"", Math.max(index1 - 1, 0));
         if(index1 != -1 && index2 != -1) {
+          VariableSubstitutor substitutor = new VariableSubstitutor(getInstalldata().getVariables());
+          String installPath = substitutor.substitute("$INSTALL_PATH", null);
           rh.setValue(keyPath, key, stringData.substring(0, index1 + " -jar ".length()) + "\"" + new File(installPath).getAbsolutePath() + "\\DJ JarExe\\DJJarExe.jar\"" + stringData.substring(index2));
         }
       }

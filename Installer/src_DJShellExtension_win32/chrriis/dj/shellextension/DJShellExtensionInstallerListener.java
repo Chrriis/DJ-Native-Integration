@@ -22,16 +22,6 @@ import com.izforge.izpack.util.os.RegistryHandler;
  */
 public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
 
-  protected String installPath;
-  protected String winDirPath;
-  
-  @Override
-  public void beforePacks(AutomatedInstallData automatedInstallData, Integer packCount, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
-    VariableSubstitutor substitutor = new VariableSubstitutor(automatedInstallData.getVariables());
-    installPath = substitutor.substitute("$INSTALL_PATH", null);
-    winDirPath = substitutor.substitute("${ENV[windir]}", null);
-  }
-
   @Override
   public void afterPack(Pack pack, Integer integer, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
     if(!"DJ ShellExtension".equals(pack.name)) {
@@ -45,6 +35,8 @@ public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
     if(!rh.keyExist(keyPath)) {
       rh.createKey(keyPath);
     }
+    VariableSubstitutor substitutor = new VariableSubstitutor(getInstalldata().getVariables());
+    String installPath = substitutor.substitute("$INSTALL_PATH", null);
     Process process = new ProcessBuilder("regsvr32.exe", "/s", new File(installPath).getAbsolutePath() + "\\DJ ShellExtension\\DJShellExtension.dll").start();
     process.waitFor();
   }
