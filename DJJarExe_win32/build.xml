@@ -1,0 +1,24 @@
+<project name="JarExe build script" default="createJar">
+
+  <property name="DJTweak.dir" location="../DJTweak/Release/DJTweak.jar" />
+
+  <target name="createJar" description="Create the Jar files">
+    <delete file="Release/DJJarExe.jar" />
+    <jar duplicate="preserve" destfile="Release/DJJarExe_.jar">
+      <fileset dir="bin"/>
+      <manifest>
+        <attribute name="Main-Class" value="chrriis.dj.jarexe.JarExe"/>
+      </manifest>
+    </jar>
+    <taskdef resource="chrriis/dj/ant/task.properties" classpath="${DJTweak.dir}"/>
+    <dj file="Release/DJJarExe_.jar" tofile="Release/DJJarExe.jar">
+      <icons>
+        <internalset>
+          <include name="chrriis/dj/jarexe/resource/DJJarExe??x??.png"/>
+        </internalset>
+      </icons>
+    </dj>
+    <delete file="Release/DJJarExe_.jar" />
+  </target>
+
+</project>

@@ -1,0 +1,10 @@
+The DJ Project - Rediscover the Dekstop
+http://djproject.sourceforge.net
+Christopher Deckers (chrriis@nextencia.net)
+Licence terms: GPL v2 (see licence.txt)
+
+---------------------------------- Change log ----------------------------------
+
+* Version 1.001 (March 30, 2007):
+
+- Initial release, which makes an executable Jar file run as a proper process.
