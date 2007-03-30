@@ -1,0 +1,31 @@
+<project name="JarExe build script" default="createInstaller">
+
+  <property name="IzPack.dir" location="C:\Program Files\IzPack"/>
+
+	<target name="createInstaller" description="Create the Jar files">
+    <delete file="Release/DJProject-Setup.jar"/>
+    <delete file="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar"/>
+    <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar">
+      <fileset dir="bin" includes="chrriis/dj/jarexe/DJJarExeInstallerListener.class"/>
+    </jar>
+    <delete file="${IzPack.dir}/bin/customActions/DJJarExeUninstallerListener.jar"/>
+    <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJJarExeUninstallerListener.jar">
+      <fileset dir="bin" includes="chrriis/dj/jarexe/DJJarExeUninstallerListener.class"/>
+    </jar>
+    <delete file="${IzPack.dir}/bin/customActions/DJShellExtensionInstallerListener.jar"/>
+    <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJShellExtensionInstallerListener.jar">
+      <fileset dir="bin" includes="chrriis/dj/shellextension/DJShellExtensionInstallerListener.class"/>
+    </jar>
+    <delete file="${IzPack.dir}/bin/customActions/DJShellExtensionUninstallerListener.jar"/>
+    <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJShellExtensionUninstallerListener.jar">
+      <fileset dir="bin" includes="chrriis/dj/shellextension/DJShellExtensionUninstallerListener.class"/>
+    </jar>
+    <taskdef name="izpack" classpath="${IzPack.dir}\lib\compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
+    <izpack input="resources/izpack.xml" output="Release/DJProjectSetup-win32.jar" installerType="standard" basedir="." izPackDir="${IzPack.dir}/"/>
+    <delete file="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar"/>
+    <delete file="${IzPack.dir}/bin/customActions/DJJarExeUninstallerListener.jar"/>
+    <delete file="${IzPack.dir}/bin/customActions/DJShellExtensionInstallerListener.jar"/>
+    <delete file="${IzPack.dir}/bin/customActions/DJShellExtensionUninstallerListener.jar"/>
+  </target>
+
+</project>

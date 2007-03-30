@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+
+  <skipIfNotSupported/>
+
+  <programGroup defaultName="$APP_NAME" location="applications"/>
+
+   <shortcut
+     name="License"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\license.txt"
+     commandLine=""
+     description="The license file of the DJ Project">
+   </shortcut>
+
+   <shortcut
+     name="DJ Tweak"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\DJ Tweak\DJTweak.jar"
+     commandLine=""
+     description="The main DJ Project utility to tweak the integration behaviors">
+     <createForPack name="DJ Tweak"/>
+   </shortcut>
+
+   <shortcut
+     name="Uninstall"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+     commandLine=""
+     iconFile="%SystemRoot%\system32\SHELL32.dll"
+     iconIndex="31"
+     description="The uninstaller of the DJ Project">
+   </shortcut>
+
+</shortcuts>
