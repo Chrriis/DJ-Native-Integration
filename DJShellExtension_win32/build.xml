@@ -1,0 +1,7 @@
+<project name="ShellExtension build script" default="createRelease">
+
+	<target name="createRelease" description="Create the Jar files">
+    <copy file="src/DJShellExtension/Release/DJShellExtension.dll" todir="Release"/>
+  </target>
+
+</project>
