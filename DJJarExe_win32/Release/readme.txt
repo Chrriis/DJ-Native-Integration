@@ -25,12 +25,20 @@ by:
 Note 1: the process returns immediately after the JAR file is launched.
 Note 2: if a problem occurs, then the JAR file is launched without the process
 management.
+Note 3: When multiple versions of Java are installed, it was noticed that
+DJJarExe would work only with the default version.
+
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+It is possible to make the same executable JAR file behave as different
+processes, by setting the system property "dj.jarexe.pid". For example:
+    java.exe -Ddj.jarexe.pid="1" -jar DJJarExe.jar myJar.jar myParam1 myParam2
 
 If one needs to identify the process, it bears the name of the JAR file. The
 actual path on the other hand is different. It is created like this:
 <temp_directory>/.djjarexe/<modified_path_to_jar>/<jar_name>
 The modified_path_to_jar is a directory created with the path to the JAR file
-where '/', '\' and ':' are replaced by '_'.
+where '/', '\' and ':' are replaced by '_'. In addition, if the pid property is
+specified, it is appended to that path name.
 
 
 3. What is the development status?

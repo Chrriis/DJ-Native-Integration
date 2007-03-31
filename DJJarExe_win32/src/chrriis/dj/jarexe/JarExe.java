@@ -9,6 +9,7 @@ package chrriis.dj.jarexe;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,16 +29,44 @@ public class JarExe {
     }
     String jarFilePath = args[0];
     File jarFile = new File(jarFilePath);
-    File exeFile = new File(tmpDir, jarFile.getParentFile().getAbsolutePath().replace('/', '_').replace('\\', '_').replace(':', '_') + "/" + jarFile.getName());
-    if(!exeFile.exists()) {
+    String jarFileParentPath = jarFile.getParentFile().getAbsolutePath().replace('/', '_').replace('\\', '_').replace(':', '_');
+    String pid = System.getProperty("dj.jarexe.pid");
+    if(pid != null) {
+      jarFileParentPath += pid;
+    }
+    File exeFile = new File(tmpDir, jarFileParentPath + "/" + jarFile.getName());
+    String javaHome = System.getProperty("java.home");
+    if(!exeFile.exists() || exeFile.delete()) {
       exeFile.getParentFile().mkdirs();
       try {
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(System.getProperty("java.home") + "\\bin\\javaw.exe"));
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeFile));
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(javaHome + "\\bin\\javaw.exe"));
+        // Start of new implementation that removes the process description, which makes the shell default to the name of the process
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] bytes = new byte[8192];
         for(int i; (i=in.read(bytes))>-1; ) {
-          out.write(bytes, 0, i);
+          baos.write(bytes, 0, i);
         }
+        bytes = baos.toByteArray();
+        byte[] pattern = new byte[] {'J', 0, 'a', 0, 'v', 0, 'a', 0, '(', 0, 'T', 0, 'M', 0, ')', 0};
+        for(int i=0; i<bytes.length; i++) {
+          for(int j=0; j<pattern.length; j++) {
+            if(bytes[i + j] != pattern[j]) {
+              break;
+            }
+            if(j == pattern.length - 1) {
+              bytes[i] = 0;
+              bytes[i + 1] = 0;
+            }
+          }
+        }
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeFile));
+        out.write(bytes);
+        // End of new implementation
+//        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(exeFile));
+//        byte[] bytes = new byte[8192];
+//        for(int i; (i=in.read(bytes))>-1; ) {
+//          out.write(bytes, 0, i);
+//        }
         try {
           in.close();
         } catch(Exception e) {
@@ -53,7 +82,7 @@ public class JarExe {
       }
     }
     if(!exeFile.exists()) {
-      exeFile = new File(System.getProperty("java.home") + "\\bin\\javaw.exe");
+      exeFile = new File(javaHome + "\\bin\\javaw.exe");
     }
     // Run the new exe file
     String[] newArgs = new String[args.length + 2];
@@ -63,6 +92,7 @@ public class JarExe {
     args = newArgs;
     try {
       ProcessBuilder processBuilder = new ProcessBuilder(args);
+      processBuilder.environment().put("JAVA_HOME", javaHome);
       processBuilder.directory(jarFile.getParentFile());
       processBuilder.start();
     } catch(Exception e) {
