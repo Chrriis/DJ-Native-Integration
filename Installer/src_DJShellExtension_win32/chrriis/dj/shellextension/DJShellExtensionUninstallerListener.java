@@ -80,6 +80,12 @@ public class DJShellExtensionUninstallerListener extends SimpleUninstallerListen
       tempFile.delete();
       file.renameTo(tempFile);
     }
+    if(process.exitValue() != 0) {
+      Frame[] frames = Frame.getFrames();
+      if(frames.length > 0) {
+        JOptionPane.showMessageDialog(frames[0], "The DJ ShellExtension failed to unregister.\nA possible reason is because of too restrictive access rights.", "Registration failed", JOptionPane.ERROR_MESSAGE);
+      }
+    }
   }
   
   public static void main(String[] args) {

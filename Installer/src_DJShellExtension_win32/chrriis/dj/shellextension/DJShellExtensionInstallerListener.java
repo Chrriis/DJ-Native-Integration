@@ -50,7 +50,19 @@ public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
     if(!"DJ ShellExtension".equals(pack.name)) {
       return;
     }
+    VariableSubstitutor substitutor = new VariableSubstitutor(getInstalldata().getVariables());
+    String installPath = substitutor.substitute("$INSTALL_PATH", null);
+    Process process = new ProcessBuilder("regsvr32.exe", "/s", new File(installPath).getAbsolutePath() + "\\DJ ShellExtension\\DJShellExtension.dll").start();
+    process.waitFor();
+    if(process.exitValue() != 0) {
+      Frame[] frames = Frame.getFrames();
+      if(frames.length > 0) {
+        JOptionPane.showMessageDialog(frames[0], "The DJ ShellExtension failed to register.\nA possible reason is because of too restrictive access rights.", "Registration failed", JOptionPane.ERROR_MESSAGE);
+      }
+      return;
+    }
     isInstallingShellExtension = true;
+    System.err.println(process.exitValue());
     RegistryHandler rh = RegistryDefaultHandler.getInstance();
     rh.setRoot(RegistryHandler.HKEY_CLASSES_ROOT);
     rh.setValue("jarfile\\DefaultIcon", "", "%1");
@@ -59,10 +71,6 @@ public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
     if(!rh.keyExist(keyPath)) {
       rh.createKey(keyPath);
     }
-    VariableSubstitutor substitutor = new VariableSubstitutor(getInstalldata().getVariables());
-    String installPath = substitutor.substitute("$INSTALL_PATH", null);
-    Process process = new ProcessBuilder("regsvr32.exe", "/s", new File(installPath).getAbsolutePath() + "\\DJ ShellExtension\\DJShellExtension.dll").start();
-    process.waitFor();
   }
 
   public static void main(String[] args) {
