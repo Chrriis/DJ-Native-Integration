@@ -21,6 +21,7 @@ import com.izforge.izpack.util.os.RegistryHandler;
 public class DJJarExeUninstallerListener extends SimpleUninstallerListener {
 
   public void beforeDeletion(List files, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+    super.beforeDeletion(files, abstractUIProgressHandler);
     RegistryHandler rh = RegistryDefaultHandler.getInstance();
     rh.setRoot(RegistryHandler.HKEY_CLASSES_ROOT);
     String keyPath = "jarfile\\shell\\open\\command";

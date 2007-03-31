@@ -13,6 +13,7 @@
     <url>http://djproject.sourceforge.net</url>
   </info>
   <guiprefs width="640" height="480" resizable="yes">
+    <modifier key="useLabelIcons" value="no"/>
     <modifier key="useHeadingPanel" value="yes"/>
     <modifier key="headingLineCount" value="1"/>
     <modifier key="headingFontSize" value="1.5"/>
@@ -45,6 +46,9 @@
     <panel classname="SimpleFinishPanel"/>
   </panels>
   <listeners>
+    <listener installer="UninstallInstallerListener">
+      <os family="windows"/>
+    </listener>
     <listener installer="RegistryInstallerListener" uninstaller="RegistryUninstallerListener">
       <os family="windows"/>
     </listener>

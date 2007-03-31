@@ -24,7 +24,8 @@ import com.izforge.izpack.util.os.RegistryHandler;
 public class DJJarExeInstallerListener extends SimpleInstallerListener {
 
   @Override
-  public void afterPack(Pack pack, Integer integer, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+  public void afterPack(Pack pack, Integer packNumber, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+    super.afterPack(pack, packNumber, abstractUIProgressHandler);
     if(!"DJ JarExe".equals(pack.name)) {
       return;
     }

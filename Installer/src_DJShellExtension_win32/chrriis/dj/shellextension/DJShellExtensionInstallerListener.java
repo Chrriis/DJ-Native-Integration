@@ -11,6 +11,7 @@ import java.awt.Frame;
 import java.io.File;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.izforge.izpack.Pack;
 import com.izforge.izpack.event.SimpleInstallerListener;
@@ -25,20 +26,27 @@ import com.izforge.izpack.util.os.RegistryHandler;
  */
 public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
 
-  public void afterPacks(AutomatedInstallData idata, AbstractUIProgressHandler handler) throws Exception {
+  public void afterPacks(AutomatedInstallData automatedInstallData, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+    super.afterPacks(automatedInstallData, abstractUIProgressHandler);
     if(!isInstallingShellExtension) {
       return;
     }
-    Frame[] frames = Frame.getFrames();
-    if(frames.length > 0) {
-      JOptionPane.showMessageDialog(frames[0], "You will need to restart the computer when the installation\nis complete for some changes to take effect.", "Restart needed", JOptionPane.INFORMATION_MESSAGE);
-    }
+    // We postpone to allow the progress to reach 100% before blocking with the modal dialog.
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        Frame[] frames = Frame.getFrames();
+        if(frames.length > 0) {
+          JOptionPane.showMessageDialog(frames[0], "You will need to restart the computer when the installation\nis complete for some changes to take effect.", "Restart needed", JOptionPane.INFORMATION_MESSAGE);
+        }
+      }
+    });
   }
 
   protected boolean isInstallingShellExtension;
   
   @Override
-  public void afterPack(Pack pack, Integer integer, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+  public void afterPack(Pack pack, Integer packNumber, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+    super.afterPack(pack, packNumber, abstractUIProgressHandler);
     if(!"DJ ShellExtension".equals(pack.name)) {
       return;
     }

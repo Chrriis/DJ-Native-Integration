@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.izforge.izpack.event.SimpleUninstallerListener;
 import com.izforge.izpack.util.AbstractUIProgressHandler;
@@ -25,18 +26,25 @@ public class DJShellExtensionUninstallerListener extends SimpleUninstallerListen
 
   @Override
   public void afterDeletion(List files, AbstractUIProgressHandler handler) throws Exception {
+    super.afterDeletion(files, handler);
     if(!isShellExtensionInstalled) {
       return;
     }
-    Frame[] frames = Frame.getFrames();
-    if(frames.length > 0) {
-      JOptionPane.showMessageDialog(frames[0], "You will need to restart the computer after the uninstallation\nfor some changes to take effect.", "Restart needed", JOptionPane.INFORMATION_MESSAGE);
-    }
+    // We postpone to allow the progress to reach 100% before blocking with the modal dialog.
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        Frame[] frames = Frame.getFrames();
+        if(frames.length > 0) {
+          JOptionPane.showMessageDialog(frames[0], "You will need to restart the computer after the uninstallation\nfor some changes to take effect.", "Restart needed", JOptionPane.INFORMATION_MESSAGE);
+        }
+      }
+    });
   }
   
   protected boolean isShellExtensionInstalled;
   
   public void beforeDeletion(List files, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+    super.beforeDeletion(files, abstractUIProgressHandler);
     RegistryHandler rh = RegistryDefaultHandler.getInstance();
     rh.setRoot(RegistryHandler.HKEY_CLASSES_ROOT);
     String keyPath = "jarfile\\DefaultIcon";
@@ -60,6 +68,7 @@ public class DJShellExtensionUninstallerListener extends SimpleUninstallerListen
 
   /*@Override*/
   public void beforeDelete_(File file, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
+//    super.beforeDelete(file, abstractUIProgressHandler);
     if(!file.getName().equals("DJShellExtension.dll")) {
       return;
     }
