@@ -62,7 +62,6 @@ public class DJShellExtensionInstallerListener extends SimpleInstallerListener {
       return;
     }
     isInstallingShellExtension = true;
-    System.err.println(process.exitValue());
     RegistryHandler rh = RegistryDefaultHandler.getInstance();
     rh.setRoot(RegistryHandler.HKEY_CLASSES_ROOT);
     rh.setValue("jarfile\\DefaultIcon", "", "%1");
