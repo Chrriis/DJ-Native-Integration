@@ -5,6 +5,9 @@ Licence terms: GPL v2 (see licence.txt)
 
 ---------------------------------- Change log ----------------------------------
 
-* Version 1.001 (March 30, 2007):
+* Version 1.001 (xxxxxxxxxxxxx):
 
-- Initial release, which makes an executable Jar file run as a proper process.
+- Jar files are executed as different processes.
+- Executable Jar files appear with their name in the task manager.
+- Task bar aggregation shows the JAR file name when launching multiple times.
+- Possibility to make the same JAR file launched as different processes (pid)

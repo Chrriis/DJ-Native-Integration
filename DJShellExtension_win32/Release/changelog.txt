@@ -1,5 +1,6 @@
 The DJ Project - Rediscover the Dekstop
 http://djproject.sourceforge.net
+Christopher Deckers (chrriis@nextencia.net)
 Issam Chehab (issam.chehab at gmail dot com)
 Licence terms: GPL v2 (see licence.txt)
 
