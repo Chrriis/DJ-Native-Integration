@@ -5,8 +5,8 @@
 /* link this file in with the server and any clients */
 
 
- /* File created by MIDL compiler version 7.00.0499 */
-/* at Wed Mar 14 10:43:12 2007
+ /* File created by MIDL compiler version 6.00.0366 */
+/* at Sun Apr 01 20:23:16 2007
  */
 /* Compiler settings for .\DesktopJavaShellExtension.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)

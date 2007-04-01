@@ -3,8 +3,8 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 7.00.0499 */
-/* at Wed Mar 14 10:43:12 2007
+ /* File created by MIDL compiler version 6.00.0366 */
+/* at Sun Apr 01 20:23:16 2007
  */
 /* Compiler settings for .\DesktopJavaShellExtension.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -89,6 +89,8 @@ typedef struct PropertySheetHandler PropertySheetHandler;
 extern "C"{
 #endif 
 
+void * __RPC_USER MIDL_user_allocate(size_t);
+void __RPC_USER MIDL_user_free( void * ); 
 
 #ifndef __IIconHandler_INTERFACE_DEFINED__
 #define __IIconHandler_INTERFACE_DEFINED__
@@ -116,8 +118,7 @@ EXTERN_C const IID IID_IIconHandler;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IIconHandler * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            /* [iid_is][out] */ void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IIconHandler * This);
@@ -139,7 +140,7 @@ EXTERN_C const IID IID_IIconHandler;
             IIconHandler * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [range][in] */ UINT cNames,
+            /* [in] */ UINT cNames,
             /* [in] */ LCID lcid,
             /* [size_is][out] */ DISPID *rgDispId);
         
@@ -168,26 +169,26 @@ EXTERN_C const IID IID_IIconHandler;
 
 
 #define IIconHandler_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
 #define IIconHandler_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
+    (This)->lpVtbl -> AddRef(This)
 
 #define IIconHandler_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
+    (This)->lpVtbl -> Release(This)
 
 
 #define IIconHandler_GetTypeInfoCount(This,pctinfo)	\
-    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
 
 #define IIconHandler_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
-    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
 
 #define IIconHandler_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
-    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
 
 #define IIconHandler_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
-    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
 #endif /* COBJMACROS */
@@ -227,8 +228,7 @@ EXTERN_C const IID IID_IPropertySheetHandler;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IPropertySheetHandler * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            /* [iid_is][out] */ void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IPropertySheetHandler * This);
@@ -250,7 +250,7 @@ EXTERN_C const IID IID_IPropertySheetHandler;
             IPropertySheetHandler * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [range][in] */ UINT cNames,
+            /* [in] */ UINT cNames,
             /* [in] */ LCID lcid,
             /* [size_is][out] */ DISPID *rgDispId);
         
@@ -279,26 +279,26 @@ EXTERN_C const IID IID_IPropertySheetHandler;
 
 
 #define IPropertySheetHandler_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
 #define IPropertySheetHandler_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
+    (This)->lpVtbl -> AddRef(This)
 
 #define IPropertySheetHandler_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
+    (This)->lpVtbl -> Release(This)
 
 
 #define IPropertySheetHandler_GetTypeInfoCount(This,pctinfo)	\
-    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
 
 #define IPropertySheetHandler_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
-    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
 
 #define IPropertySheetHandler_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
-    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
 
 #define IPropertySheetHandler_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
-    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
 #endif /* COBJMACROS */
