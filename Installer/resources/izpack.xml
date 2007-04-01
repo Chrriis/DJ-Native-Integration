@@ -34,6 +34,8 @@
     <res id="RegistrySpec.xml" src="resources/RegistrySpec.xml"/>
     <res id="shortcutSpec.xml" src="resources/ShortcutSpec.xml"/>
     <res id="CustomLangpack.xml_eng" src="resources/CustomLangpack_eng.xml"/>
+    <!--res id="customicons.xml" src="resources/CustomIcons.xml"/>
+    <res id="DJFrameIcon.png" src="resources/DJInstall32x32.png"/-->
   </resources>
   <panels>
     <panel classname="HelloPanel"/>
