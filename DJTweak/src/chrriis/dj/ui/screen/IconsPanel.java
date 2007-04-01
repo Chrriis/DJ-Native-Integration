@@ -20,8 +20,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +30,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
@@ -97,17 +98,42 @@ public class IconsPanel extends JPanel {
             IconInfo IconInfo = (IconInfo)iconInfoJList.getModel().getElementAt(i);
             iconInfoList.add(IconInfo);
           }
+          boolean isModified = false;
           for(File file: imageFileChooser.getSelectedFiles()) {
             try {
               URL fileURL = file.toURL();
               ImageIcon imageIcon = new ImageIcon(fileURL);
-              iconInfoList.add(new IconInfo(imageIcon.getIconWidth(), imageIcon.getIconHeight(), UIUtil.JAR_ICONS_PATH + file.getName(), fileURL));
+              int iconWidth = imageIcon.getIconWidth();
+              int iconHeight = imageIcon.getIconHeight();
+              boolean isValid = true;
+              if(iconWidth != iconHeight) {
+                isValid = JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + file.getName() + "\" has a width that does not equal its height, which may be ignored by the icon extension.\nDo you want to add it anyway?", "Non-square icon", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION;
+              }
+              if(isValid) {
+                for(Iterator<IconInfo> it=iconInfoList.iterator(); it.hasNext(); ) {
+                  IconInfo iconInfo = it.next();
+                  if(iconInfo.getWidth() == iconWidth && iconInfo.getHeight() == iconHeight) {
+                    if(JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + file.getName() + "\" has the same size as another icon.\nDo you want to replace the other icon?", "Duplicate sizes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION) {
+                      it.remove();
+                    } else {
+                      isValid = false;
+                    }
+                    break;
+                  }
+                }
+              }
+              if(isValid) {
+                iconInfoList.add(new IconInfo(iconWidth, iconHeight, UIUtil.JAR_ICONS_PATH + file.getName(), fileURL));
+                isModified = true;
+              }
             } catch(Exception ex) {
               ex.printStackTrace();
             }
           }
-          iconInfoJList.setModel(iconInfoList.toArray(new IconInfo[0]));
-          IconsPanel.this.firePropertyChange("jarModified", false, true);
+          if(isModified) {
+            iconInfoJList.setModel(iconInfoList.toArray(new IconInfo[0]));
+            IconsPanel.this.firePropertyChange("jarModified", false, true);
+          }
         }
       }
     });
@@ -145,12 +171,45 @@ public class IconsPanel extends JPanel {
         addButton.setEnabled(false);
         final Runnable actionRunnable = new Runnable() {
           public void run() {
-            final List<Object> newIconInfoList = new ArrayList<Object>();
-            newIconInfoList.addAll(iconInfoList);
-            newIconInfoList.addAll(Arrays.asList(availableIconInfoJList.getSelectedValues()));
-            iconInfoJList.setModel(newIconInfoList.toArray(new IconInfo[0]));
-            dialog.dispose();
-            IconsPanel.this.firePropertyChange("jarModified", false, true);
+            Object[] selectedValues = availableIconInfoJList.getSelectedValues();
+            List<IconInfo> addedIconInfoList = new ArrayList<IconInfo>();
+            boolean isModified = false;
+            for(int i=0; i<selectedValues.length; i++) {
+              IconInfo selectedIconInfo = (IconInfo)selectedValues[i];
+              boolean isValid = true;
+              int iconWidth = selectedIconInfo.getWidth();
+              int iconHeight = selectedIconInfo.getHeight();
+              if(iconWidth != iconHeight) {
+                String path = selectedIconInfo.getPath();
+                isValid = JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + path.substring(path.lastIndexOf('/') + 1) + "\" has a width that does not equal its height, which may be ignored by the icon extension.\nDo you want to add it anyway?", "Non-square icon", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION;
+              }
+              if(isValid) {
+                for(Iterator<IconInfo> it=iconInfoList.iterator(); it.hasNext(); ) {
+                  IconInfo iconInfo = it.next();
+                  if(iconInfo.getWidth() == iconWidth && iconInfo.getHeight() == iconHeight) {
+                    String path = selectedIconInfo.getPath();
+                    if(JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + path.substring(path.lastIndexOf('/') + 1) + "\" has the same size as another icon.\nDo you want to replace the other icon?", "Duplicate sizes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION) {
+                      it.remove();
+                    } else {
+                      isValid = false;
+                    }
+                    break;
+                  }
+                }
+              }
+              if(isValid) {
+                addedIconInfoList.add(selectedIconInfo);
+                isModified = true;
+              }
+            }
+            if(isModified) {
+              final List<Object> newIconInfoList = new ArrayList<Object>();
+              newIconInfoList.addAll(iconInfoList);
+              newIconInfoList.addAll(addedIconInfoList);
+              iconInfoJList.setModel(newIconInfoList.toArray(new IconInfo[0]));
+              IconsPanel.this.firePropertyChange("jarModified", false, true);
+              dialog.dispose();
+            }
           }
         };
         addButton.addActionListener(new ActionListener() {
