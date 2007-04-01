@@ -47,15 +47,35 @@ public class JarExe {
           baos.write(bytes, 0, i);
         }
         bytes = baos.toByteArray();
-        byte[] pattern = new byte[] {'J', 0, 'a', 0, 'v', 0, 'a', 0, '(', 0, 'T', 0, 'M', 0, ')', 0};
+        byte[] pattern = new byte[] {'F', 0, 'i', 0, 'l', 0, 'e', 0, 'D', 0, 'e', 0, 's', 0, 'c', 0, 'r', 0, 'i', 0, 'p', 0, 't', 0, 'i', 0, 'o', 0, 'n', 0};
         for(int i=0; i<bytes.length; i++) {
           for(int j=0; j<pattern.length; j++) {
             if(bytes[i + j] != pattern[j]) {
               break;
             }
             if(j == pattern.length - 1) {
-              bytes[i] = 0;
-              bytes[i + 1] = 0;
+              int start = i + j + 1;
+              for(; start < bytes.length && bytes[start] == 0; start++);
+              int end = start;
+              for(; end < bytes.length && bytes[end] != 0; end+=2);
+              String name = jarFile.getName();
+              int charCount = name.length();
+              if(name.endsWith(".jar")) {
+                charCount -= ".jar".length();
+                name = name.substring(0, charCount);
+              }
+              if(end - start > charCount * 2) {
+                for(int k=0; k<charCount; k++) {
+                  int value = name.charAt(k);
+                  bytes[start + k * 2] = (byte)(value & 0xFF);
+                  bytes[start + k * 2 + 1] = (byte)(value >> 8);
+                }
+                bytes[start + charCount * 2] = 0;
+                bytes[start + charCount * 2 + 1] = 0;
+              } else {
+                bytes[start] = 0;
+                bytes[start + 1] = 0;
+              }
             }
           }
         }
