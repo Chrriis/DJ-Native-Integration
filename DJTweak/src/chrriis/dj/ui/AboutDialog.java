@@ -34,12 +34,12 @@ public class AboutDialog extends JDialog {
     contentPane.add(new JLabel(new ImageIcon(getClass().getResource("resource/DJTweak200x200.png"))), BorderLayout.WEST);
     JEditorPane editorPane = new JEditorPane("text/html", 
         "<html><head><style>body{font:Sans-Serif}</style></head>" +
-        "<h1>Desktop Java<br>" +
+        "<h1>The DJ Project<br>" +
         "Rediscover the Desktop</h1><br>" +
         getLink("http://djproject.sourceforge.net") + "<br>" +
         "<br>" +
         "DJ Tweak - Configuration Utility<br>" +
-        "Christopher Deckers<br>" +
+        "Christopher Deckers (chrriis@nextencia.net)<br>" +
         "</html>");
     if(System.getProperty("java.version").compareTo("1.6") >= 0) {
       editorPane.addHyperlinkListener(new HyperlinkListener() {
