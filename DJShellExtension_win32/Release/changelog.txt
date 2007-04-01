@@ -5,6 +5,11 @@ Licence terms: GPL v2 (see licence.txt)
 
 ---------------------------------- Change log ----------------------------------
 
+* Version 1.0.0.2 (xxxxxxxxxxxxxx):
+
+- Changed to static linking to install the DLL from the Java installer.
+
+
 * Version 1.0.0.1 (March 14, 2007):
 
 - Initial release, which displays dynamic icons and manifest attributes.
