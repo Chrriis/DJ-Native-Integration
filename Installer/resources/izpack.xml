@@ -64,6 +64,7 @@
   <packs>
     <pack name="Core" required="yes">
       <description>Base files.</description>
+      <file src="Release/readme.txt" targetdir="$INSTALL_PATH"/>
       <file src="resources/license.txt" targetdir="$INSTALL_PATH"/>
       <file src="resources/DJ.ico" targetdir="$INSTALL_PATH" os="windows"/>
     </pack>

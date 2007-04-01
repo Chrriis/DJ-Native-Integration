@@ -20,6 +20,18 @@
    </shortcut>
 
    <shortcut
+     name="Read Me"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\readme.txt"
+     commandLine=""
+     description="General information about the DJ Project">
+   </shortcut>
+
+   <shortcut
      name="Website"
      programGroup="yes"
      desktop="no"

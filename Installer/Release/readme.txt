@@ -18,19 +18,20 @@ of the operating system.
 
 The installer allows to decide which of the features to install. Most of the
 features actually configure the environment automatically.
-Some utilies can be accessed from the shortcuts in the Start menu if this was
-selected at install time.
+
+Some utilies can be accessed from the shortcuts in the Start menu if this option
+was selected at install time.
 
 
 3. What is the development status?
 
 Several integrations to the Windows operating system and the necessary utilities
-are implemented and seem stable. More integration may come if there is a need.
+are implemented and seem stable. More extensions may come if we see a need.
 
 About other operating systems support, we lack the competences to implement the
-same functionalities. The modifications that affect the files, like the icon
-support for JAR files, are implemented with platform independance in mind, so it
-is theoretically possible to do it.
+same functionalities. Nevertheless, the modifications affecting the files, like
+the icon support for JAR files, are implemented with platform independance in
+mind, so it is theoretically possible to implement it.
 If someone with the necessary competences wants to contribute, just contact us!
 
 For more detailed information about the current implementation status, visit
