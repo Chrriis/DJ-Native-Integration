@@ -48,7 +48,7 @@ public class UninstallInstallerListener extends SimpleInstallerListener {
           ProcessBuilder processBuilder = new ProcessBuilder(System.getProperty("java.home") + "\\bin\\javaw.exe", "-jar", uninstallerFilePath, "-c", "-f");
           Process process = processBuilder.start();
           process.waitFor();
-          for(int i=0; i<50; i++) {
+          for(int i=0; i<100; i++) {
             if(!appDir.exists()) {
               break;
             }
