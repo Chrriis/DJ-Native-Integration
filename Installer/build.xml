@@ -2,7 +2,10 @@
 
   <property name="IzPack.dir" location="C:\Program Files\IzPack"/>
 
-	<target name="createInstaller" description="Create the Jar files">
+	<target name="createInstaller" description="Create the installer">
+		<ant dir="../DJTweak"/>
+		<ant dir="../DJJarExe_win32"/>
+		<ant dir="../DJShellExtension_win32"/>
     <delete file="Release/DJProject-Setup.jar"/>
     <delete file="${IzPack.dir}/bin/customActions/UninstallInstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/UninstallInstallerListener.jar">
