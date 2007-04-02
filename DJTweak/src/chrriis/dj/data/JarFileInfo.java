@@ -38,6 +38,7 @@ public class JarFileInfo {
   protected String[] imagePaths;
   protected Manifest manifest;
   
+  public static final String JAR_ICONS_PATH = "META-INF/JarIcons/";
   protected static final String META_INF_PATH = "META-INF/";
   protected static final String JAR_ICON_PREFIX = "Jar-Icon-";
   
@@ -60,11 +61,7 @@ public class JarFileInfo {
         if(!isSigned && ucName.startsWith(META_INF_PATH) && ucName.endsWith(".SF")) {
           isSigned = true;
         } else if(ucName.endsWith(".GIF") || ucName.endsWith(".PNG")) {
-          if(name.startsWith(META_INF_PATH)) {
-            imagePathList.add(name.substring(META_INF_PATH.length()));
-          } else {
-            imagePathList.add("/" + name);
-          }
+          imagePathList.add(name);
         }
       }
       imagePaths = imagePathList.toArray(new String[0]);
@@ -134,12 +131,11 @@ public class JarFileInfo {
     if(fileURL == null) {
       throw new IllegalStateException("The JAR file has no URL location!");
     }
-    String fullPath = imagePath;
-    if(!fullPath.startsWith("/")) {
-      fullPath = '/' + META_INF_PATH + fullPath;
+    if(!imagePath.startsWith("/")) {
+      imagePath = '/' + imagePath;
     }
     try {
-      return new URL("jar:" + fileURL + "!" + fullPath);
+      return new URL("jar:" + fileURL + "!" + imagePath);
     } catch(Exception e) {
       throw new IllegalStateException("The icon has no URL location!", e);
     }
@@ -164,8 +160,8 @@ public class JarFileInfo {
         attributes.putValue(key, path);
         if(iconInfo.getResourceURL() != null) {
           newExternalIconInfoList.add(iconInfo);
-        } else if(!path.startsWith("/")) {
-          oldExternalIconPathList.add(META_INF_PATH + path);
+        } else if(path.startsWith(JAR_ICONS_PATH)) {
+          oldExternalIconPathList.add(path);
         }
       }
     }
@@ -182,7 +178,7 @@ public class JarFileInfo {
         ZipEntry entry = entries.nextElement();
         String name = entry.getName();
         entry.setCompressedSize(-1);
-        if(!name.toLowerCase(Locale.ENGLISH).equals("meta-inf/manifest.mf") && (!name.startsWith(META_INF_PATH) || oldExternalIconPathList.contains(name))) {
+        if(!name.toLowerCase(Locale.ENGLISH).equals("meta-inf/manifest.mf") && (!name.startsWith(JAR_ICONS_PATH) || oldExternalIconPathList.contains(name))) {
           out.putNextEntry(entry);
           InputStream in = jarFile.getInputStream(entry);
           byte[] bytes = new byte[1024];
@@ -195,7 +191,7 @@ public class JarFileInfo {
       }
       for(IconInfo iconInfo: newExternalIconInfoList) {
         BufferedInputStream in = new BufferedInputStream(iconInfo.getResourceURL().openStream());
-        out.putNextEntry(new ZipEntry(META_INF_PATH + iconInfo.getPath()));
+        out.putNextEntry(new ZipEntry(iconInfo.getPath()));
         iconInfo.setResourceURL(null);
         byte[] bytes = new byte[1024];
         for(int i; (i=in.read(bytes))>= 0; ) {

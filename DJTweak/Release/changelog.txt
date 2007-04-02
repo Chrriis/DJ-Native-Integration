@@ -7,6 +7,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 * Version 1.002 (xxxxxxxxxxxxxx):
 
+- Icons are defined with their full path, with or without a preceding '/'.
 - When adding a non-square icon, the user is warned.
 - When the icon is going to replace another one, the user is warned.
 - Slight changes to the about screen.

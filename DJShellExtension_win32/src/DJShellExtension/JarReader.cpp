@@ -306,9 +306,7 @@ HICON JarReader::loadIconFromJar(int width)
 HICON JarReader::convertJarIconToIco(wstring& fname,unsigned int width)
 {
     wstring filename = fname;
-    if (filename[0] != '/') {
-        filename.insert(0,L"META-INF/");
-    } else {
+    if (filename[0] == '/') {
         filename.erase(0,1);
     }
     //

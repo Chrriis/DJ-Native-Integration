@@ -25,6 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import chrriis.dj.data.JarFileInfo;
 import chrriis.dj.ui.screen.AttributesPanel;
@@ -70,6 +72,20 @@ public class JarPane extends JPanel {
     jarFileTextField = new JTextField(14);
     gridBag.setConstraints(jarFileTextField, cons);
     savePanel.add(jarFileTextField);
+    jarFileTextField.getDocument().addDocumentListener(new DocumentListener() {
+      public void changedUpdate(DocumentEvent e) {
+        update();
+      }
+      public void insertUpdate(DocumentEvent e) {
+        update();
+      }
+      public void removeUpdate(DocumentEvent e) {
+        update();
+      }
+      protected void update() {
+        saveButton.setEnabled(true);
+      }
+    });
     cons.gridx++;
     cons.weightx = 0;
     jarFileButton = new JButton("...");

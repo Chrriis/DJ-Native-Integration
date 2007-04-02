@@ -18,8 +18,6 @@ import javax.swing.filechooser.FileFilter;
  */
 public class UIUtil {
 
-  public static final String JAR_ICONS_PATH = "JarIcons/";
-
   protected static final JFileChooser FILE_CHOOSER = new JFileChooser();
   static {
     FILE_CHOOSER.setAcceptAllFileFilterUsed(false);

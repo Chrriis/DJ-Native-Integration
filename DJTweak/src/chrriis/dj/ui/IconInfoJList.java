@@ -160,7 +160,7 @@ public class IconInfoJList extends JList {
         cons.weightx = 1;
         cons.gridx++;
         cons.gridy = 0;
-        JLabel pathValueLabel = new JLabel(path.startsWith("/")? path: "/META-INF/" + path);
+        JLabel pathValueLabel = new JLabel(path);
         pathValueLabel.setForeground(foreground);
         pathValueLabel.setFont(font);
         gridBag.setConstraints(pathValueLabel, cons);

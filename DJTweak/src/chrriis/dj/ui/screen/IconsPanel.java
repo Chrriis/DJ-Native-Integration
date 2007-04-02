@@ -123,7 +123,7 @@ public class IconsPanel extends JPanel {
                 }
               }
               if(isValid) {
-                iconInfoList.add(new IconInfo(iconWidth, iconHeight, UIUtil.JAR_ICONS_PATH + file.getName(), fileURL));
+                iconInfoList.add(new IconInfo(iconWidth, iconHeight, JarFileInfo.JAR_ICONS_PATH + file.getName(), fileURL));
                 isModified = true;
               }
             } catch(Exception ex) {

@@ -26,7 +26,6 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import chrriis.dj.data.DataUtil;
 import chrriis.dj.data.IconInfo;
 import chrriis.dj.data.JarFileInfo;
-import chrriis.dj.ui.UIUtil;
 
 /**
  * @author Christopher Deckers
@@ -60,8 +59,8 @@ public class Icons {
         String entryName = en.nextElement().getName();
         if(isIncluded(project, entryName)) {
           System.out.println("Adding internal icon: " + entryName);
-          if(!entryName.startsWith("/")) {
-            entryName = "/" + entryName;
+          if(entryName.startsWith("/")) {
+            entryName = entryName.substring(1);
           }
           Dimension size = DataUtil.getImageSize(jarfileInfo.getImageURL(entryName));
           iconInfoList.add(new IconInfo(size.width, size.height, entryName, null));
@@ -94,7 +93,7 @@ public class Icons {
         try {
           URL fileURL = file.toURL();
           Dimension size = DataUtil.getImageSize(fileURL);
-          iconInfoList.add(new IconInfo(size.width, size.height, UIUtil.JAR_ICONS_PATH + file.getName(), fileURL));
+          iconInfoList.add(new IconInfo(size.width, size.height, JarFileInfo.JAR_ICONS_PATH + file.getName(), fileURL));
         } catch(Exception e) {
 //          e.printStackTrace();
           System.err.println("Could not get the image information for \"" + fileName + "\"");

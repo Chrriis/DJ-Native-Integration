@@ -8,6 +8,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 * Version 1.0.0.2 (xxxxxxxxxxxxxx):
 
+- Icons are defined with their full path, with or without a preceding '/'.
 - Icons were hidden in the manifest properties, but they are now shown.
 - Empty main class attribute does not show the Jar as executable.
 - Changed to static linking to install the DLL from the Java installer.
