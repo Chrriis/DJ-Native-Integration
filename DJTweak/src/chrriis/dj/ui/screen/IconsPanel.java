@@ -13,6 +13,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Window;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -23,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -41,6 +48,7 @@ import javax.swing.event.ListSelectionListener;
 import chrriis.dj.data.DataUtil;
 import chrriis.dj.data.IconInfo;
 import chrriis.dj.data.JarFileInfo;
+import chrriis.dj.ui.DJPane;
 import chrriis.dj.ui.IconInfoJList;
 import chrriis.dj.ui.UIUtil;
 
@@ -54,10 +62,63 @@ public class IconsPanel extends JPanel {
   protected JButton addFromFileButton;
   protected JButton removeButton;
   
-  public IconsPanel() {
+  public IconsPanel(final DJPane djPane) {
     super(new BorderLayout(0, 0));
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     iconInfoJList = new IconInfoJList();
+    iconInfoJList.setDropTarget(new DropTarget(iconInfoJList, DnDConstants.ACTION_COPY, new DropTargetAdapter() {
+      @Override
+      public void dragEnter(DropTargetDragEvent dtde) {
+        processDrag(dtde);
+      }
+      @Override
+      public void dragOver(DropTargetDragEvent dtde) {
+        processDrag(dtde);
+      }
+      @Override
+      public void dropActionChanged(DropTargetDragEvent dtde) {
+        processDrag(dtde);
+      }
+      protected void processDrag(DropTargetDragEvent dtde) {
+        int sourceActions = dtde.getSourceActions();
+        if((sourceActions & DnDConstants.ACTION_COPY) == 0) {
+          dtde.rejectDrag();
+          return;
+        }
+        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+        if(isFileListValid(fileList)) {
+          dtde.acceptDrag(DnDConstants.ACTION_COPY);
+        } else {
+          dtde.rejectDrag();
+        }
+      }
+      public void drop(DropTargetDropEvent dtde) {
+        dtde.acceptDrop(DnDConstants.ACTION_COPY);
+        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+        if(isFileListValid(fileList)) {
+          if(fileList.size() == 1) {
+            File file = fileList.get(0);
+            if(file.getName().toLowerCase(Locale.ENGLISH).endsWith(".jar")) {
+              djPane.loadJarFile(file);
+              return;
+            }
+          }
+          importExternalFiles(fileList.toArray(new File[0]));
+        }
+      }
+      protected boolean isFileListValid(List<File> fileList) {
+        for(File file: fileList) {
+          String lcName = file.getName().toLowerCase(Locale.ENGLISH);
+          if(!lcName.endsWith(".gif") && !lcName.endsWith(".png")) {
+            return lcName.endsWith(".jar") && fileList.size() == 1;
+          }
+        }
+        if(!iconInfoJList.isEnabled()) {
+          return false;
+        }
+        return !fileList.isEmpty();
+      }
+    }));
     add(new JScrollPane(iconInfoJList), BorderLayout.CENTER);
     JPanel iconActionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0));
     iconActionsPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -93,47 +154,7 @@ public class IconsPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         JFileChooser imageFileChooser = UIUtil.getImagesFileChooser();
         if(imageFileChooser.showOpenDialog(IconsPanel.this) == JFileChooser.APPROVE_OPTION) {
-          List<IconInfo> iconInfoList = new ArrayList<IconInfo>();
-          for(int i=iconInfoJList.getModel().getSize()-1; i>=0; i--) {
-            IconInfo IconInfo = (IconInfo)iconInfoJList.getModel().getElementAt(i);
-            iconInfoList.add(IconInfo);
-          }
-          boolean isModified = false;
-          for(File file: imageFileChooser.getSelectedFiles()) {
-            try {
-              URL fileURL = file.toURL();
-              ImageIcon imageIcon = new ImageIcon(fileURL);
-              int iconWidth = imageIcon.getIconWidth();
-              int iconHeight = imageIcon.getIconHeight();
-              boolean isValid = true;
-              if(iconWidth != iconHeight) {
-                isValid = JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + file.getName() + "\" has a width that does not equal its height, which may be ignored by the icon extension.\nDo you want to add it anyway?", "Non-square icon", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION;
-              }
-              if(isValid) {
-                for(Iterator<IconInfo> it=iconInfoList.iterator(); it.hasNext(); ) {
-                  IconInfo iconInfo = it.next();
-                  if(iconInfo.getWidth() == iconWidth && iconInfo.getHeight() == iconHeight) {
-                    if(JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + file.getName() + "\" has the same size as another icon.\nDo you want to replace the other icon?", "Duplicate sizes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION) {
-                      it.remove();
-                    } else {
-                      isValid = false;
-                    }
-                    break;
-                  }
-                }
-              }
-              if(isValid) {
-                iconInfoList.add(new IconInfo(iconWidth, iconHeight, JarFileInfo.JAR_ICONS_PATH + file.getName(), fileURL));
-                isModified = true;
-              }
-            } catch(Exception ex) {
-              ex.printStackTrace();
-            }
-          }
-          if(isModified) {
-            iconInfoJList.setModel(iconInfoList.toArray(new IconInfo[0]));
-            IconsPanel.this.firePropertyChange("jarModified", false, true);
-          }
+          importExternalFiles(imageFileChooser.getSelectedFiles());
         }
       }
     });
@@ -241,6 +262,50 @@ public class IconsPanel extends JPanel {
     loadContent(null);
   }
 
+  protected void importExternalFiles(File[] files) {
+    List<IconInfo> iconInfoList = new ArrayList<IconInfo>();
+    for(int i=iconInfoJList.getModel().getSize()-1; i>=0; i--) {
+      IconInfo IconInfo = (IconInfo)iconInfoJList.getModel().getElementAt(i);
+      iconInfoList.add(IconInfo);
+    }
+    boolean isModified = false;
+    for(File file: files) {
+      try {
+        URL fileURL = file.toURL();
+        ImageIcon imageIcon = new ImageIcon(fileURL);
+        int iconWidth = imageIcon.getIconWidth();
+        int iconHeight = imageIcon.getIconHeight();
+        boolean isValid = true;
+        if(iconWidth != iconHeight) {
+          isValid = JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + file.getName() + "\" has a width that does not equal its height, which may be ignored by the icon extension.\nDo you want to add it anyway?", "Non-square icon", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION;
+        }
+        if(isValid) {
+          for(Iterator<IconInfo> it=iconInfoList.iterator(); it.hasNext(); ) {
+            IconInfo iconInfo = it.next();
+            if(iconInfo.getWidth() == iconWidth && iconInfo.getHeight() == iconHeight) {
+              if(JOptionPane.showOptionDialog(IconsPanel.this, "The icon \"" + file.getName() + "\" has the same size as another icon.\nDo you want to replace the other icon?", "Duplicate sizes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == JOptionPane.YES_OPTION) {
+                it.remove();
+              } else {
+                isValid = false;
+              }
+              break;
+            }
+          }
+        }
+        if(isValid) {
+          iconInfoList.add(new IconInfo(iconWidth, iconHeight, JarFileInfo.JAR_ICONS_PATH + file.getName(), fileURL));
+          isModified = true;
+        }
+      } catch(Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+    if(isModified) {
+      iconInfoJList.setModel(iconInfoList.toArray(new IconInfo[0]));
+      IconsPanel.this.firePropertyChange("jarModified", false, true);
+    }
+  }
+  
   protected JarFileInfo jarFileInfo;
   
   public void loadContent(JarFileInfo jarFileInfo) {

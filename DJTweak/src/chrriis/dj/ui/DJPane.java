@@ -11,28 +11,25 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.TransferHandler;
 
 /**
  * @author Christopher Deckers
  */
 public class DJPane extends JPanel {
 
+  protected JTextField jarFileTextField;
   protected Runnable openJarChooserRunnable;
+  protected Runnable loadTextFieldJarRunnable;
   
   public DJPane() {
     super(new BorderLayout());
@@ -49,9 +46,10 @@ public class DJPane extends JPanel {
     sourceJarPanel.add(jarFileLabel);
     cons.gridx++;
     cons.weightx = 1;
-    final JTextField jarFileTextField = new JTextField(14);
-    final JarPane jarPane = new JarPane();
-    final Runnable loadTextFieldJarRunnable = new Runnable() {
+    jarFileTextField = new JTextField(14);
+    jarFileTextField.setDropTarget(null);
+    final JarPane jarPane = new JarPane(this);
+    loadTextFieldJarRunnable = new Runnable() {
       public void run() {
         File selectedFile = new File(jarFileTextField.getText());
         if(!selectedFile.exists() || !selectedFile.isFile()/* || !selectedFile.getName().toLowerCase(Locale.ENGLISH).endsWith(".jar")*/) {
@@ -92,36 +90,15 @@ public class DJPane extends JPanel {
         openJarChooserRunnable.run();
       }
     });
-    setTransferHandler(new TransferHandler() {
-      public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
-        for(DataFlavor dataFlavor: transferFlavors) {
-          if(dataFlavor.equals(DataFlavor.javaFileListFlavor)) {
-            return true;
-          }
-        }
-        return false;
-      }
-      @Override
-      public boolean importData(JComponent comp, Transferable t) {
-        DataFlavor[] transferFlavors = t.getTransferDataFlavors();
-        for(DataFlavor dataFlavor: transferFlavors) {
-          if(dataFlavor.equals(DataFlavor.javaFileListFlavor)) {
-            try {
-              List fileList = (List)t.getTransferData(dataFlavor);
-              jarFileTextField.setText(((File)fileList.get(0)).getAbsolutePath());
-              loadTextFieldJarRunnable.run();
-            } catch(Exception e) {
-              e.printStackTrace();
-            }
-          }
-        }
-        return false;
-      }
-    });
   }
 
   public void openJarChooser() {
     openJarChooserRunnable.run();
+  }
+  
+  public void loadJarFile(File file) {
+    jarFileTextField.setText(file.getAbsolutePath());
+    loadTextFieldJarRunnable.run();
   }
   
 }

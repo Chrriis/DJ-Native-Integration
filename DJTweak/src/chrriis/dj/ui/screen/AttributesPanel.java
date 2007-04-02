@@ -123,6 +123,7 @@ public class AttributesPanel extends JPanel {
         return getParent().getHeight() > getPreferredSize().height;
       }
     };
+    table.setDropTarget(null);
     tableSorter = new TableSorter(tableModel);
     table.setModel(tableSorter);
     tableSorter.setTableHeader(table.getTableHeader());

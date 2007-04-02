@@ -9,9 +9,18 @@ package chrriis.dj.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -39,6 +48,49 @@ public class DJFrame extends JFrame {
     }
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     final DJPane djPane = new DJPane();
+    setDropTarget(new DropTarget(this, DnDConstants.ACTION_COPY, new DropTargetAdapter() {
+      @Override
+      public void dragEnter(DropTargetDragEvent dtde) {
+        processDrag(dtde);
+      }
+      @Override
+      public void dragOver(DropTargetDragEvent dtde) {
+        processDrag(dtde);
+      }
+      @Override
+      public void dropActionChanged(DropTargetDragEvent dtde) {
+        processDrag(dtde);
+      }
+      protected void processDrag(DropTargetDragEvent dtde) {
+        int sourceActions = dtde.getSourceActions();
+        if((sourceActions & DnDConstants.ACTION_COPY) == 0) {
+          dtde.rejectDrag();
+          return;
+        }
+        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+        if(isFileListValid(fileList)) {
+          dtde.acceptDrag(DnDConstants.ACTION_COPY);
+        } else {
+          dtde.rejectDrag();
+        }
+      }
+      public void drop(DropTargetDropEvent dtde) {
+        dtde.acceptDrop(DnDConstants.ACTION_COPY);
+        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+        if(isFileListValid(fileList)) {
+          djPane.loadJarFile(fileList.get(0));
+        }
+      }
+      protected boolean isFileListValid(List<File> fileList) {
+        for(File file: fileList) {
+          String lcName = file.getName().toLowerCase(Locale.ENGLISH);
+          if(!lcName.endsWith(".jar")) {
+            return false;
+          }
+        }
+        return fileList.size() == 1;
+      }
+    }));
     JMenuBar menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
     fileMenu.setMnemonic('F');

@@ -45,12 +45,12 @@ public class JarPane extends JPanel {
   protected AttributesPanel attributesPanel;
   protected JButton saveButton;
   
-  public JarPane() {
+  public JarPane(final DJPane djPane) {
     super(new BorderLayout(0, 0));
     setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
     tabbedPane.setEnabled(false);
-    iconsPanel = new IconsPanel();
+    iconsPanel = new IconsPanel(djPane);
     tabbedPane.addTab("Icons", iconsPanel);
     attributesPanel = new AttributesPanel();
     tabbedPane.addTab("Properties", attributesPanel);
@@ -70,6 +70,7 @@ public class JarPane extends JPanel {
     cons.gridx++;
     cons.weightx = 1;
     jarFileTextField = new JTextField(14);
+    jarFileTextField.setDropTarget(null);
     gridBag.setConstraints(jarFileTextField, cons);
     savePanel.add(jarFileTextField);
     jarFileTextField.getDocument().addDocumentListener(new DocumentListener() {

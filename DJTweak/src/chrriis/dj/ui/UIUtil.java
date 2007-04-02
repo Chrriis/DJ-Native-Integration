@@ -7,7 +7,13 @@
  */
 package chrriis.dj.ui;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JFileChooser;
@@ -63,6 +69,45 @@ public class UIUtil {
   
   public static void setWorkingDirectory(File workingDirectory) {
     FILE_CHOOSER.setCurrentDirectory(workingDirectory);
+  }
+
+  public static final DataFlavor URI_LIST_FLAVOR;
+  static {
+    DataFlavor uriListFlavor;
+    try {
+      uriListFlavor = new DataFlavor("text/uri-list;class=java.lang.String");
+    } catch(Exception e) {
+      uriListFlavor = null;
+    }
+    URI_LIST_FLAVOR = uriListFlavor;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static List<File> getFileList(Transferable t, boolean isJavaFileListFlavorSupported, boolean isURIListFlavorSupported) {
+    try {
+      List<File> fileList;
+      if(isJavaFileListFlavorSupported) {
+        fileList = (List<File>)t.getTransferData(DataFlavor.javaFileListFlavor);
+      } else if(isURIListFlavorSupported) {
+        fileList = new ArrayList<File>();
+        // RFC 2483: text/uri-list format.
+        String uriList = (String) t.getTransferData(URI_LIST_FLAVOR);
+        String[] filepathList = uriList.split("\r\n");
+        for(int i = 0; i < filepathList.length; i++) {
+          String filepath = filepathList[i].trim();
+          if(filepath.length() > 0) {
+            filepath = filepath.replace("%25%25", "%25");
+            fileList.add(new File(URI.create(filepath)));
+          }
+        }
+      } else {
+        return Collections.EMPTY_LIST;
+      }
+      return fileList;
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+    return Collections.EMPTY_LIST;
   }
 
 }
