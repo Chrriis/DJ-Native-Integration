@@ -59,6 +59,7 @@ public class DJPane extends JPanel {
           return;
         }
         jarPane.loadFile(selectedFile);
+        UIUtil.setWorkingDirectory(selectedFile.getParentFile());
       }
     };
     add(jarPane, BorderLayout.CENTER);
