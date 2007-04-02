@@ -111,7 +111,7 @@ static const std::wstring MAIN_CLASS(L"Main-Class");
 static const std::wstring JAR_ICON_PREFIX(L"Jar-Icon-");
 bool JarReader::displayInPropertySheet(const std::wstring& key) const
 {
-    return key.find(JAR_ICON_PREFIX) != 0;
+    return true;//key.find(JAR_ICON_PREFIX) != 0;
 }
 void trim(wstring& str)
 {
@@ -188,7 +188,13 @@ void JarReader::loadManifest()
 
 bool JarReader::isRunnable()
 {
-    return manifest.find(MAIN_CLASS) != manifest.end();
+	if(manifest.find(MAIN_CLASS) != manifest.end())
+	{
+		wstring str((*manifest.find(MAIN_CLASS)).second);
+		trim(str);
+		return str.length() > 0;
+	}
+    return false;
 }
 bool JarReader::hasDefinedIcons()
 {
