@@ -9,7 +9,7 @@
     <delete file="Release/DJProject-Setup.jar"/>
     <delete file="${IzPack.dir}/bin/customActions/UninstallInstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/UninstallInstallerListener.jar">
-      <fileset dir="bin" includes="chrriis/dj/installer/**/*.*"/>
+      <fileset dir="bin" includes="chrriis/dj/installer/uninstall/**/*.*"/>
     </jar>
     <delete file="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar">

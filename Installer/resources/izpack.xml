@@ -7,12 +7,12 @@
     <appname>DJ Project</appname>
     <appversion>1.0.1</appversion>
     <authors>
-      <author name="Christopher Deckers (admin and developer)" email="chrriis@nextencia.net"/>
-      <author name="Issam Chehab (developer)" email="issam.chehab@gmail.com"/>
+      <author name="Christopher Deckers (admin and developer)" email=""/>
+      <author name="Issam Chehab (developer)" email=""/>
     </authors>
     <url>http://djproject.sourceforge.net</url>
   </info>
-  <guiprefs width="640" height="480" resizable="yes">
+  <guiprefs width="550" height="400" resizable="yes">
     <modifier key="useLabelIcons" value="no"/>
     <modifier key="useHeadingPanel" value="yes"/>
     <modifier key="headingLineCount" value="1"/>
@@ -28,21 +28,21 @@
     <langpack iso3="eng"/>
   </locale>
   <resources>
-    <res id="Heading.image" src="resources/DJ64x64.png"/>
+    <res id="Heading.image" src="resources/DJ64x56.png"/>
     <res id="HTMLInfoPanel.info" src="resources/install-readme.html"/>
     <res id="LicencePanel.licence" src="resources/license.txt"/>
     <res id="RegistrySpec.xml" src="resources/RegistrySpec.xml"/>
     <res id="shortcutSpec.xml" src="resources/ShortcutSpec.xml"/>
     <res id="CustomLangpack.xml_eng" src="resources/CustomLangpack_eng.xml"/>
-    <!--res id="customicons.xml" src="resources/CustomIcons.xml"/>
-    <res id="DJFrameIcon.png" src="resources/DJInstall32x32.png"/-->
+    <res id="customicons.xml" src="resources/CustomIcons.xml"/>
+    <res id="DJFrameIcon.png" src="resources/DJInstall32x32.png"/>
   </resources>
   <panels>
-    <panel classname="HelloPanel"/>
+    <!--panel classname="HelloPanel"/-->
     <panel classname="HTMLInfoPanel"/>
     <panel classname="LicencePanel"/>
-    <panel classname="TargetPanel"/>
     <panel classname="PacksPanel"/>
+    <panel classname="TargetPanel"/>
     <panel classname="InstallPanel"/>
     <panel classname="ShortcutPanel"/>
     <panel classname="SimpleFinishPanel"/>
