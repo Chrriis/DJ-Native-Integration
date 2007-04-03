@@ -141,7 +141,8 @@ public class JarFileInfo {
     }
   }
   
-  public void saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, File outFile) {
+  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, File outFile) {
+    boolean isSuccess = false;
     if(manifest == null) {
       manifest = new Manifest();
     }
@@ -206,12 +207,17 @@ public class JarFileInfo {
         sourceFile.delete();
         if(!outputFile.renameTo(sourceFile)) {
           outputFile.delete();
+        } else {
+          isSuccess = true;
         }
+      } else {
+        isSuccess = true;
       }
       load(sourceFile);
     } catch(Exception e) {
-      e.printStackTrace();
+//      e.printStackTrace();
     }
+    return isSuccess;
   }
   
   public File getSourceFile() {

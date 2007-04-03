@@ -21,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -109,8 +110,12 @@ public class JarPane extends JPanel {
       public void actionPerformed(ActionEvent e) {
         String outFileName = jarFileTextField.getText();
         File outFile = jarFileInfo.getSourceFile().getPath().equals(outFileName)? null: new File(outFileName);
-        jarFileInfo.saveInfos(attributesPanel.getAttributeInfos(), iconsPanel.getIconInfos(), outFile);
-        saveButton.setEnabled(false);
+        if(jarFileInfo.saveInfos(attributesPanel.getAttributeInfos(), iconsPanel.getIconInfos(), outFile)) {
+          saveButton.setEnabled(false);
+        } else {
+          String reason = (outFile.exists()? "The file may be in use": "The path may be invalid") + ", or you may not have the necessary permissions.";
+          JOptionPane.showMessageDialog(JarPane.this, "The information could not be written to the file \"" + outFileName + "\".\n" + reason, "Error while saving", JOptionPane.ERROR_MESSAGE);
+        }
       }
     });
     gridBag.setConstraints(saveButton, cons);

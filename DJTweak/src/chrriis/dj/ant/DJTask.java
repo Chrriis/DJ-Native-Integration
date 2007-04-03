@@ -60,8 +60,11 @@ public class DJTask extends Task {
         throw new BuildException(e);
       }
     }
-    jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, toFile);
-    System.out.println("Saving jar: " + toFile.getPath());
+    String toFilePath = toFile.getPath();
+    System.out.println("Saving jar: " + toFilePath);
+    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, toFile)) {
+      throw new BuildException("The information could not be written to the file \"" + toFilePath + "\". The path may be invalid, or you may not have the necessary permissions.");
+    }
   }
   
 }

@@ -13,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Window;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
@@ -85,8 +84,7 @@ public class IconsPanel extends JPanel {
           dtde.rejectDrag();
           return;
         }
-        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
-        if(isFileListValid(fileList)) {
+        if(isFileListValid(UIUtil.getDnDFileList(dtde))) {
           dtde.acceptDrag(DnDConstants.ACTION_COPY);
         } else {
           dtde.rejectDrag();
@@ -94,7 +92,7 @@ public class IconsPanel extends JPanel {
       }
       public void drop(DropTargetDropEvent dtde) {
         dtde.acceptDrop(DnDConstants.ACTION_COPY);
-        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+        List<File> fileList = UIUtil.getDnDFileList(dtde);
         if(isFileListValid(fileList)) {
           if(fileList.size() == 1) {
             File file = fileList.get(0);

@@ -9,6 +9,8 @@ package chrriis.dj.ui;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class UIUtil {
     FILE_CHOOSER.setCurrentDirectory(workingDirectory);
   }
 
-  public static final DataFlavor URI_LIST_FLAVOR;
+  protected static final DataFlavor URI_LIST_FLAVOR;
   static {
     DataFlavor uriListFlavor;
     try {
@@ -82,8 +84,16 @@ public class UIUtil {
     URI_LIST_FLAVOR = uriListFlavor;
   }
 
+  public static List<File> getDnDFileList(DropTargetDragEvent dtde) {
+    return UIUtil.getDnDFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+  }
+
+  public static List<File> getDnDFileList(DropTargetDropEvent dtde) {
+    return UIUtil.getDnDFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+  }
+  
   @SuppressWarnings("unchecked")
-  public static List<File> getFileList(Transferable t, boolean isJavaFileListFlavorSupported, boolean isURIListFlavorSupported) {
+  protected static List<File> getDnDFileList(Transferable t, boolean isJavaFileListFlavorSupported, boolean isURIListFlavorSupported) {
     try {
       List<File> fileList;
       if(isJavaFileListFlavorSupported) {

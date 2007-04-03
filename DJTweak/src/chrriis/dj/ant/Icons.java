@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
@@ -32,12 +33,6 @@ import chrriis.dj.data.JarFileInfo;
  */
 public class Icons {
 
-  protected String images;
-  
-  public void setImages(String images) {
-    this.images = images;
-  }
-  
   protected List<PatternSet> patternSetList = new ArrayList<PatternSet>();
 
   public void addInternalset(PatternSet patternSet) {
@@ -58,41 +53,42 @@ public class Icons {
       for(Enumeration<JarEntry> en=new JarFile(jarfileInfo.getSourceFile()).entries(); en.hasMoreElements(); ) {
         String entryName = en.nextElement().getName();
         if(isIncluded(project, entryName)) {
-          System.out.println("Adding internal icon: " + entryName);
+          System.out.println("Adding internal image: " + entryName);
           if(entryName.startsWith("/")) {
             entryName = entryName.substring(1);
           }
           Dimension size = DataUtil.getImageSize(jarfileInfo.getImageURL(entryName));
+          for(IconInfo iconInfo: iconInfoList) {
+            if(iconInfo.getWidth() == size.width && iconInfo.getHeight() == size.height) {
+              throw new BuildException("The image \"" + entryName + "\" has the same size as \"" + iconInfo.getPath() + "\"");
+            }
+          }
+          if(size.width != size.height) {
+            System.out.println("Warning: the image \"" + entryName + "\" has a width that does not equal its height, which may be ignored by the icon extension.");
+          }
           iconInfoList.add(new IconInfo(size.width, size.height, entryName, null));
         }
       }
     }
-//    if(images != null) {
-//      String[] imagePaths = images.split("[:;]");
-//      for(String imagePath: imagePaths) {
-//        if(!imagePath.startsWith("/")) {
-//          imagePath = "/" + imagePath;
-//        }
-//        try {
-//          System.out.println("Adding internal icon: " + imagePath);
-//          Dimension size = DataUtil.getImageSize(jarfileInfo.getImageURL(imagePath));
-//          iconInfoList.add(new IconInfo(size.width, size.height, imagePath, null));
-//        } catch(Exception e) {
-////          e.printStackTrace();
-//          System.err.println("Could not get the image information for \"" + imagePath + "\"");
-//        }
-//      }
-//    }
     for(FileSet fileSet: fileSetList) {
       DirectoryScanner ds = fileSet.getDirectoryScanner(project);
       File dir = ds.getBasedir();
       String[] fileNames = ds.getIncludedFiles();
       for(String fileName: fileNames) {
         File file = new File(dir, fileName);
-        System.out.println("Adding external icon: " + file.getPath());
+        String filePath = file.getPath();
+        System.out.println("Adding external image: " + filePath);
         try {
           URL fileURL = file.toURL();
           Dimension size = DataUtil.getImageSize(fileURL);
+          for(IconInfo iconInfo: iconInfoList) {
+            if(iconInfo.getWidth() == size.width && iconInfo.getHeight() == size.height) {
+              throw new BuildException("The image \"" + filePath + "\" has the same size as \"" + iconInfo.getPath() + "\"");
+            }
+          }
+          if(size.width != size.height) {
+            System.out.println("Warning: the image \"" + filePath + "\" has a width that does not equal its height, which may be ignored by the icon extension.");
+          }
           iconInfoList.add(new IconInfo(size.width, size.height, JarFileInfo.JAR_ICONS_PATH + file.getName(), fileURL));
         } catch(Exception e) {
 //          e.printStackTrace();

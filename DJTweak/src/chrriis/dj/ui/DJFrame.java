@@ -9,7 +9,6 @@ package chrriis.dj.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
@@ -67,8 +66,7 @@ public class DJFrame extends JFrame {
           dtde.rejectDrag();
           return;
         }
-        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
-        if(isFileListValid(fileList)) {
+        if(isFileListValid(UIUtil.getDnDFileList(dtde))) {
           dtde.acceptDrag(DnDConstants.ACTION_COPY);
         } else {
           dtde.rejectDrag();
@@ -76,7 +74,7 @@ public class DJFrame extends JFrame {
       }
       public void drop(DropTargetDropEvent dtde) {
         dtde.acceptDrop(DnDConstants.ACTION_COPY);
-        List<File> fileList = UIUtil.getFileList(dtde.getTransferable(), dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor), dtde.isDataFlavorSupported(UIUtil.URI_LIST_FLAVOR));
+        List<File> fileList = UIUtil.getDnDFileList(dtde);
         if(isFileListValid(fileList)) {
           djPane.loadJarFile(fileList.get(0));
         }
