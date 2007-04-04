@@ -14,6 +14,7 @@ import org.apache.tools.ant.Task;
 
 import chrriis.dj.data.IconInfo;
 import chrriis.dj.data.JarFileInfo;
+import chrriis.dj.data.VMArgsInfo;
 
 /**
  * @author Christopher Deckers
@@ -35,6 +36,12 @@ public class DJTask extends Task {
   
   public void addIcons(Icons icons) {
     this.icons = icons;
+  }
+  
+  protected VMArgs vmArgs;
+
+  public void addVmargs(VMArgs vmArgs) {
+    this.vmArgs = vmArgs;
   }
   
   public void execute() throws BuildException {
@@ -60,9 +67,17 @@ public class DJTask extends Task {
         throw new BuildException(e);
       }
     }
+    VMArgsInfo[] vmArgsInfos = jarfileInfo.getVMArgsInfos();
+    if(vmArgs != null) {
+      try {
+        vmArgsInfos = vmArgs.getVMArgsInfo(getProject(), jarfileInfo);
+      } catch(Exception e) {
+        throw new BuildException(e);
+      }
+    }
     String toFilePath = toFile.getPath();
     System.out.println("Saving jar: " + toFilePath);
-    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, toFile)) {
+    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, vmArgsInfos, toFile)) {
       throw new BuildException("The information could not be written to the file \"" + toFilePath + "\". The path may be invalid, or you may not have the necessary permissions.");
     }
   }

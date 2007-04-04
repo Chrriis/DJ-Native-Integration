@@ -43,4 +43,35 @@ public class DataUtil {
     return new Dimension(icon.getIconWidth(), icon.getIconHeight());
   }
   
+  public static String escapeXML(String s) {
+    if(s == null || s.length() == 0) {
+      return s;
+    }
+    StringBuffer sb = new StringBuffer((int)(s.length() * 1.1));
+    for(int i=0; i<s.length(); i++) {
+      char c = s.charAt(i);
+      switch(c) {
+        case '<':
+          sb.append("&lt;");
+          break;
+        case '>':
+          sb.append("&gt;");
+          break;
+        case '&':
+          sb.append("&amp;");
+          break;
+        case '\'':
+          sb.append("&apos;");
+          break;
+        case '\"':
+          sb.append("&quot;");
+          break;
+        default:
+          sb.append(c);
+        break;
+      }
+    }
+    return sb.toString();
+  }
+  
 }

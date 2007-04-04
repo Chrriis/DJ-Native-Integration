@@ -8,14 +8,16 @@ Licence terms: GPL v2 (see license.txt)
 
 DJ JarExe is part of the DJ tool set. It allows to run an executable JAR file in
 its own dedicated process, which is easily identifiable in the task manager
-through its name.
+through its name. It also allows the JAR files to run with pre-configured
+Virtual Machine (VM) arguments, which can be defined per VM vendor and version.
 
 DJ JarExe requires Java 5.0 or greater.
 
 
 2. How to use it?
 
-The program self registers in the operating system automatically.
+The program self registers in the operating system automatically. To configure
+the Virtual Machine parameters, you should refer to the DJ Tweak utility.
 
 Alternatively, one can use it by changing a typical line like:
     java.exe -jar myJar.jar myParam1 myParam2
@@ -28,7 +30,6 @@ management.
 Note 3: When multiple versions of Java are installed, it was noticed that
 DJJarExe would work only with the default version.
 
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
 It is possible to make the same executable JAR file behave as different
 processes, by setting the system property "dj.jarexe.pid". For example:
     java.exe -Ddj.jarexe.pid="1" -jar DJJarExe.jar myJar.jar myParam1 myParam2

@@ -9,15 +9,33 @@ package chrriis.dj.jarexe;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author Christopher Deckers
  */
 public class JarExe {
+
+  protected static final String PID_PROPERTY = "dj.jarexe.pid";
+  protected static final String EXE_PROPERTY = "dj.jarexe.exe";
+  protected static final String VM_ARGS_HEADER = "VM-Args";
 
   public JarExe(String[] args) {
     String tmpDirPath = System.getProperty("java.io.tmpdir") + "/.djjarexe";
@@ -30,7 +48,7 @@ public class JarExe {
     String jarFilePath = args[0];
     File jarFile = new File(jarFilePath);
     String jarFileParentPath = jarFile.getParentFile().getAbsolutePath().replace('/', '_').replace('\\', '_').replace(':', '_');
-    String pid = System.getProperty("dj.jarexe.pid");
+    String pid = System.getProperty(PID_PROPERTY);
     if(pid != null) {
       jarFileParentPath += pid;
     }
@@ -104,11 +122,13 @@ public class JarExe {
     if(!exeFile.exists()) {
       exeFile = new File(javaHome + "\\bin\\javaw.exe");
     }
+    String[] vmArgs = getVMArgs(jarFile);
     // Run the new exe file
-    String[] newArgs = new String[args.length + 2];
+    String[] newArgs = new String[2 + vmArgs.length + args.length];
     newArgs[0] = exeFile.getAbsolutePath();
-    newArgs[1] = "-jar";
-    System.arraycopy(args, 0, newArgs, 2, args.length);
+    System.arraycopy(vmArgs, 0, newArgs, 1, vmArgs.length);
+    newArgs[1 + vmArgs.length] = "-jar";
+    System.arraycopy(args, 0, newArgs, 2 + vmArgs.length, args.length);
     args = newArgs;
     try {
       ProcessBuilder processBuilder = new ProcessBuilder(args);
@@ -120,6 +140,86 @@ public class JarExe {
     }
     // Cleanup
     cleanUp(tmpDir);
+  }
+  
+  protected String[] getVMArgs(File jarFile) {
+    try {
+      StringBuilder sb = new StringBuilder();
+      Manifest manifest = new JarFile(jarFile).getManifest();
+      Attributes attributes = manifest.getMainAttributes();
+      for(Object key: attributes.keySet()) {
+        Attributes.Name name = (Attributes.Name)key;
+        String s = name.toString();
+        if(s.equals(VM_ARGS_HEADER)) {
+          try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new ByteArrayInputStream(attributes.getValue(s).getBytes("UTF-8")));
+            NodeList childNodes = document.getElementsByTagName("vmargs").item(0).getChildNodes();
+            for(int i=0; i<childNodes.getLength(); i++) {
+              Node node = childNodes.item(i);
+              if("pattern".equals(node.getNodeName())) {
+                NamedNodeMap argsAttributes = node.getAttributes();
+                Node item = argsAttributes.getNamedItem("vendor");
+                String vendor = item == null? "": item.getNodeValue();
+                item = argsAttributes.getNamedItem("version");
+                String version = item == null? "": item.getNodeValue();
+                item = argsAttributes.getNamedItem("args");
+                if(item != null) {
+                  String jVendor = System.getProperty("java.vendor");
+                  String jVersion = System.getProperty("java.version");
+                  if(jVendor.matches(vendor.length() == 0? ".*": vendor) && jVersion.matches(version.length() == 0? ".*": version)) {
+                    sb.append(' ').append(item.getNodeValue().trim());
+                  }
+                }
+              }
+            }
+          } catch(Exception e) {
+            e.printStackTrace();
+          }
+          break;
+        }
+      }
+      int charCount = sb.length();
+      List<String> argList = new ArrayList<String>(charCount);
+      char lastChar = 0;
+      boolean isEscaping = false;
+      StringBuilder argSB = new StringBuilder();
+      for(int i=0; i<charCount; i++) {
+        char c = sb.charAt(i);
+        switch(c) {
+          case '"':
+            if(lastChar == c) {
+              argSB.append(c);
+              lastChar = 0;
+            } else {
+              lastChar = c;
+            }
+            isEscaping = !isEscaping;
+            break;
+          case ' ':
+            if(isEscaping) {
+              argSB.append(c);
+            } else if(argSB.length() > 0) {
+              argList.add(argSB.toString());
+              argSB = new StringBuilder(charCount - i + 1);
+            }
+            lastChar = c;
+            break;
+          default:
+            argSB.append(c);
+            lastChar = c;
+            break;
+        }
+      }
+      if(argSB.length() > 0) {
+        argList.add(argSB.toString());
+      }
+      return argList.toArray(new String[0]);
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+    return new String[0];
   }
   
   protected void cleanUp(File tmpDir) {

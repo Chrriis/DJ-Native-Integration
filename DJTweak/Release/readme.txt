@@ -7,8 +7,9 @@ Licence terms: GPL v2 (see licence.txt)
 1. What is DJ Tweak?
 
 DJ Tweak is part of the DJ tool set. It allows to configure a JAR file to modify
-the icons that the operating system shows for that file. It also allows to alter
-the content of the manifest file.
+the icons that the operating system shows for that file. It also allows to
+specify the Virtual Machine arguments and to alter the content of the manifest
+file.
 
 Note that icons are shown for JAR files by the operating system only if the
 corresponding application from the DJ Project is installed.
@@ -34,6 +35,10 @@ Alternatively, you can use DJ Tweak's Ant task. Here is an example:
           <include name="some/folder/on/the/filesystem/**/*.gif"/>
         </externalset>
       </icons>
+      <vmargs>
+        <pattern vendor="Sun .*" version="1\.[^01234].*"
+            args="-DSomeProperty=SomeValue"/>
+      </vmargs>
     </dj>
   </target>
 </project>

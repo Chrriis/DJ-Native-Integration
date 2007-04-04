@@ -9,6 +9,7 @@ package chrriis.dj.data;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +25,14 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * @author Christopher Deckers
  */
@@ -35,12 +44,14 @@ public class JarFileInfo {
   protected String mainClassName;
   protected AttributeInfo[] attributeInfos;
   protected IconInfo[] iconInfos;
+  protected VMArgsInfo[] vmArgsInfos;
   protected String[] imagePaths;
   protected Manifest manifest;
   
   public static final String JAR_ICONS_PATH = "META-INF/JarIcons/";
   protected static final String META_INF_PATH = "META-INF/";
-  protected static final String JAR_ICON_PREFIX = "Jar-Icon-";
+  protected static final String JAR_ICON_HEADER_PREFIX = "Jar-Icon-";
+  protected static final String VM_ARGS_HEADER = "VM-Args";
   
   protected JarFileInfo() {
   }
@@ -70,12 +81,39 @@ public class JarFileInfo {
         Attributes attributes = manifest.getMainAttributes();
         mainClassName = attributes.getValue(Attributes.Name.MAIN_CLASS);
         List<AttributeInfo> attributeInfoList = new ArrayList<AttributeInfo>();
+        List<VMArgsInfo> vmArgsInfoList = new ArrayList<VMArgsInfo>();
         List<IconInfo> iconInfoList = new ArrayList<IconInfo>();
         for(Object key: attributes.keySet()) {
           Attributes.Name name = (Attributes.Name)key;
           String s = name.toString();
-          if(s.startsWith(JAR_ICON_PREFIX)) {
-            String[] sizes = s.substring(JAR_ICON_PREFIX.length()).split("x");
+          if(s.equals(VM_ARGS_HEADER)) {
+            try {
+              DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+              DocumentBuilder builder = factory.newDocumentBuilder();
+              Document document = builder.parse(new ByteArrayInputStream(attributes.getValue(s).getBytes("UTF-8")));
+              NodeList childNodes = document.getElementsByTagName("vmargs").item(0).getChildNodes();
+              for(int i=0; i<childNodes.getLength(); i++) {
+                Node node = childNodes.item(i);
+                if("pattern".equals(node.getNodeName())) {
+                  NamedNodeMap argsAttributes = node.getAttributes();
+                  Node item = argsAttributes.getNamedItem("vendor");
+                  String vendor = item == null? "": item.getNodeValue();
+                  item = argsAttributes.getNamedItem("version");
+                  String version = item == null? "": item.getNodeValue();
+                  item = argsAttributes.getNamedItem("args");
+                  if(item != null) {
+                    String args = item.getNodeValue();
+                    if(args.length() > 0) {
+                      vmArgsInfoList.add(new VMArgsInfo(vendor, version, args));
+                    }
+                  }
+                }
+              }
+            } catch(Exception e) {
+              e.printStackTrace();
+            }
+          } else if(s.startsWith(JAR_ICON_HEADER_PREFIX)) {
+            String[] sizes = s.substring(JAR_ICON_HEADER_PREFIX.length()).split("x");
             if(sizes.length == 2) {
               try {
                 String imagePath = attributes.getValue(s);
@@ -90,6 +128,7 @@ public class JarFileInfo {
         }
         attributeInfos = attributeInfoList.toArray(new AttributeInfo[0]);
         iconInfos = iconInfoList.toArray(new IconInfo[0]);
+        vmArgsInfos = vmArgsInfoList.toArray(new VMArgsInfo[0]);
       }
       jarFile.close();
       return true;
@@ -123,6 +162,10 @@ public class JarFileInfo {
     return iconInfos;
   }
   
+  public VMArgsInfo[] getVMArgsInfos() {
+    return vmArgsInfos;
+  }
+  
   public String[] getImagePaths() {
     return imagePaths;
   }
@@ -141,32 +184,43 @@ public class JarFileInfo {
     }
   }
   
-  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, File outFile) {
+  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, VMArgsInfo[] vmArgsInfos, File outFile) {
     boolean isSuccess = false;
     if(manifest == null) {
       manifest = new Manifest();
     }
-    Attributes attributes = manifest.getMainAttributes();
-    attributes.clear();
-    for(AttributeInfo attributeInfo: attributeInfos) {
-      attributes.putValue(attributeInfo.getKey(), attributeInfo.getValue());
-    }
-    List<String> oldExternalIconPathList = new ArrayList<String>();
-    List<IconInfo> newExternalIconInfoList = new ArrayList<IconInfo>();
-    for(int i=0; i<iconInfos.length; i++) {
-      IconInfo iconInfo = iconInfos[i];
-      String key = JAR_ICON_PREFIX + iconInfo.getWidth() + "x" + iconInfo.getHeight();
-      if(!attributes.containsKey(key)) {
-        String path = iconInfo.getPath();
-        attributes.putValue(key, path);
-        if(iconInfo.getResourceURL() != null) {
-          newExternalIconInfoList.add(iconInfo);
-        } else if(path.startsWith(JAR_ICONS_PATH)) {
-          oldExternalIconPathList.add(path);
+    try {
+      Attributes attributes = manifest.getMainAttributes();
+      attributes.clear();
+      for(AttributeInfo attributeInfo: attributeInfos) {
+        attributes.putValue(attributeInfo.getKey(), attributeInfo.getValue());
+      }
+      List<String> oldExternalIconPathList = new ArrayList<String>();
+      List<IconInfo> newExternalIconInfoList = new ArrayList<IconInfo>();
+      for(IconInfo iconInfo: iconInfos) {
+        String key = JAR_ICON_HEADER_PREFIX + iconInfo.getWidth() + "x" + iconInfo.getHeight();
+        if(!attributes.containsKey(key)) {
+          String path = iconInfo.getPath();
+          attributes.putValue(key, path);
+          if(iconInfo.getResourceURL() != null) {
+            newExternalIconInfoList.add(iconInfo);
+          } else if(path.startsWith(JAR_ICONS_PATH)) {
+            oldExternalIconPathList.add(path);
+          }
         }
       }
-    }
-    try {
+      if(vmArgsInfos.length > 0) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<vmargs>");
+        for(VMArgsInfo vmArgsInfo: vmArgsInfos) {
+          String args = vmArgsInfo.getArgs();
+          if(args.length() > 0) {
+            sb.append("<pattern vendor=\"").append(DataUtil.escapeXML(vmArgsInfo.getVendor())).append("\" version=\"").append(DataUtil.escapeXML(vmArgsInfo.getVersion())).append("\" args=\"").append(DataUtil.escapeXML(args)).append("\"/>");
+          }
+        }
+        sb.append("</vmargs>");
+        attributes.putValue(VM_ARGS_HEADER, sb.toString());
+      }
       if(outFile != null && sourceFile.getAbsolutePath().equals(outFile.getAbsolutePath())) {
         outFile = null;
       }
