@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.shellextension;
+package chrriis.dj.installer.shellextension;
 
 import java.awt.Frame;
 import java.io.File;

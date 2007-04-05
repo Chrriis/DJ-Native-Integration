@@ -35,10 +35,10 @@ Alternatively, you can use DJ Tweak's Ant task. Here is an example:
           <include name="some/folder/on/the/filesystem/**/*.gif"/>
         </externalset>
       </icons>
-      <vmargs>
+      <vmarguments>
         <pattern vendor="Sun .*" version="1\.[^01234].*"
-            args="-DSomeProperty=SomeValue"/>
-      </vmargs>
+            arguments="-DSomeProperty=SomeValue"/>
+      </vmarguments>
     </dj>
   </target>
 </project>

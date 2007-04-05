@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.jarexe;
+package chrriis.dj.installer.jarexe;
 
 import java.util.List;
 

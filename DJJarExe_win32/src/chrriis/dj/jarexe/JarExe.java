@@ -35,17 +35,17 @@ public class JarExe {
 
   protected static final String PID_PROPERTY = "dj.jarexe.pid";
   protected static final String EXE_PROPERTY = "dj.jarexe.exe";
-  protected static final String VM_ARGS_HEADER = "VM-Args";
+  protected static final String VM_ARGUMENTS_HEADER = "VM-Arguments";
 
-  public JarExe(String[] args) {
+  public JarExe(String[] arguments) {
     String tmpDirPath = System.getProperty("java.io.tmpdir") + "/.djjarexe";
     File tmpDir = new File(tmpDirPath);
     // Check argument validity
-    if(args.length < 1) {
+    if(arguments.length < 1) {
       tmpDir.delete();
       throw new IllegalArgumentException("There must be at least one argument which is the path to the JAR file!");
     }
-    String jarFilePath = args[0];
+    String jarFilePath = arguments[0];
     File jarFile = new File(jarFilePath);
     String jarFileParentPath = jarFile.getParentFile().getAbsolutePath().replace('/', '_').replace('\\', '_').replace(':', '_');
     String pid = System.getProperty(PID_PROPERTY);
@@ -122,16 +122,16 @@ public class JarExe {
     if(!exeFile.exists()) {
       exeFile = new File(javaHome + "\\bin\\javaw.exe");
     }
-    String[] vmArgs = getVMArgs(jarFile);
+    String[] vmArguments = getVMArguments(jarFile);
     // Run the new exe file
-    String[] newArgs = new String[2 + vmArgs.length + args.length];
-    newArgs[0] = exeFile.getAbsolutePath();
-    System.arraycopy(vmArgs, 0, newArgs, 1, vmArgs.length);
-    newArgs[1 + vmArgs.length] = "-jar";
-    System.arraycopy(args, 0, newArgs, 2 + vmArgs.length, args.length);
-    args = newArgs;
+    String[] newArguments = new String[2 + vmArguments.length + arguments.length];
+    newArguments[0] = exeFile.getAbsolutePath();
+    System.arraycopy(vmArguments, 0, newArguments, 1, vmArguments.length);
+    newArguments[1 + vmArguments.length] = "-jar";
+    System.arraycopy(arguments, 0, newArguments, 2 + vmArguments.length, arguments.length);
+    arguments = newArguments;
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(args);
+      ProcessBuilder processBuilder = new ProcessBuilder(arguments);
       processBuilder.environment().put("JAVA_HOME", javaHome);
       processBuilder.directory(jarFile.getParentFile());
       processBuilder.start();
@@ -142,7 +142,7 @@ public class JarExe {
     cleanUp(tmpDir);
   }
   
-  protected String[] getVMArgs(File jarFile) {
+  protected String[] getVMArguments(File jarFile) {
     try {
       StringBuilder sb = new StringBuilder();
       Manifest manifest = new JarFile(jarFile).getManifest();
@@ -150,32 +150,39 @@ public class JarExe {
       for(Object key: attributes.keySet()) {
         Attributes.Name name = (Attributes.Name)key;
         String s = name.toString();
-        if(s.equals(VM_ARGS_HEADER)) {
-          try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new ByteArrayInputStream(attributes.getValue(s).getBytes("UTF-8")));
-            NodeList childNodes = document.getElementsByTagName("vmargs").item(0).getChildNodes();
-            for(int i=0; i<childNodes.getLength(); i++) {
-              Node node = childNodes.item(i);
-              if("pattern".equals(node.getNodeName())) {
-                NamedNodeMap argsAttributes = node.getAttributes();
-                Node item = argsAttributes.getNamedItem("vendor");
-                String vendor = item == null? "": item.getNodeValue();
-                item = argsAttributes.getNamedItem("version");
-                String version = item == null? "": item.getNodeValue();
-                item = argsAttributes.getNamedItem("args");
-                if(item != null) {
-                  String jVendor = System.getProperty("java.vendor");
-                  String jVersion = System.getProperty("java.version");
-                  if(jVendor.matches(vendor.length() == 0? ".*": vendor) && jVersion.matches(version.length() == 0? ".*": version)) {
-                    sb.append(' ').append(item.getNodeValue().trim());
+        if(s.equals(VM_ARGUMENTS_HEADER)) {
+          String arguments = attributes.getValue(s).trim();
+          if(arguments.length() > 0) {
+            if(!arguments.startsWith("<")) {
+              sb.append(arguments);
+            } else {
+              try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(new ByteArrayInputStream(arguments.getBytes("UTF-8")));
+                NodeList childNodes = document.getElementsByTagName("vmarguments").item(0).getChildNodes();
+                for(int i=0; i<childNodes.getLength(); i++) {
+                  Node node = childNodes.item(i);
+                  if("pattern".equals(node.getNodeName())) {
+                    NamedNodeMap argumentsAttributes = node.getAttributes();
+                    Node item = argumentsAttributes.getNamedItem("vendor");
+                    String vendor = item == null? "": item.getNodeValue();
+                    item = argumentsAttributes.getNamedItem("version");
+                    String version = item == null? "": item.getNodeValue();
+                    item = argumentsAttributes.getNamedItem("arguments");
+                    if(item != null) {
+                      String jVendor = System.getProperty("java.vendor");
+                      String jVersion = System.getProperty("java.version");
+                      if(jVendor.matches(vendor.length() == 0? ".*": vendor) && jVersion.matches(version.length() == 0? ".*": version)) {
+                        sb.append(' ').append(item.getNodeValue().trim());
+                      }
+                    }
                   }
                 }
+              } catch(Exception e) {
+                e.printStackTrace();
               }
             }
-          } catch(Exception e) {
-            e.printStackTrace();
           }
           break;
         }

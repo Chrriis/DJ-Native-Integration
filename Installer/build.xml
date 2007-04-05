@@ -13,19 +13,19 @@
     </jar>
     <delete file="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar">
-      <fileset dir="bin" includes="chrriis/dj/jarexe/**/*.*"/>
+      <fileset dir="bin" includes="chrriis/dj/installer/jarexe/**/*.*"/>
     </jar>
     <delete file="${IzPack.dir}/bin/customActions/DJJarExeUninstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJJarExeUninstallerListener.jar">
-      <fileset dir="bin" includes="chrriis/dj/jarexe/**/*.*"/>
+      <fileset dir="bin" includes="chrriis/dj/installer/jarexe/**/*.*"/>
     </jar>
     <delete file="${IzPack.dir}/bin/customActions/DJShellExtensionInstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJShellExtensionInstallerListener.jar">
-      <fileset dir="bin" includes="chrriis/dj/shellextension/**/*.*"/>
+      <fileset dir="bin" includes="chrriis/dj/installer/shellextension/**/*.*"/>
     </jar>
     <delete file="${IzPack.dir}/bin/customActions/DJShellExtensionUninstallerListener.jar"/>
     <jar duplicate="preserve" destfile="${IzPack.dir}/bin/customActions/DJShellExtensionUninstallerListener.jar">
-      <fileset dir="bin" includes="chrriis/dj/shellextension/**/*.*"/>
+      <fileset dir="bin" includes="chrriis/dj/installer/shellextension/**/*.*"/>
     </jar>
     <taskdef name="izpack" classpath="${IzPack.dir}\lib\compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
     <izpack input="resources/izpack.xml" output="Release/DJProjectSetup-win32.jar" installerType="standard" basedir="." izPackDir="${IzPack.dir}/"/>
