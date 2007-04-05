@@ -86,7 +86,8 @@ public class IconInfoJList extends JList {
     if(iconWidth <= ICON_WIDTH && iconHeight <= ICON_HEIGHT) {
       icon = new ImageIcon(image);
     } else {
-      image = getScaledInstance(image, ICON_WIDTH, ICON_HEIGHT);
+      float ratio = Math.max(iconWidth / (float)ICON_WIDTH, iconHeight / (float)ICON_HEIGHT);
+      image = getScaledInstance(image, Math.round(iconWidth / ratio), Math.round(iconHeight / ratio));
       icon = new ImageIcon(image);
     }
     pathToIconCachedMap.put(imagePath, icon);
