@@ -72,14 +72,13 @@ public class IconInfoJList extends JList {
       if(resourceURL != null) {
         image = ImageIO.read(resourceURL);
       } else {
-        byte[] imageData = DataUtil.getImageData(jarFileInfo.getImageURL(imagePath));
-        image = ImageIO.read(new ByteArrayInputStream(imageData));
+        image = ImageIO.read(new ByteArrayInputStream(DataUtil.getImageData(jarFileInfo.getImageURL(imagePath))));
       }
     } catch(Exception e) {
       image = MISSING_IMAGE;
     }
     if(image == null) {
-      // Missing image is not suppose to be null...
+      // Missing image is not supposed to be null...
       return null;
     }
     int iconWidth = image.getWidth();
