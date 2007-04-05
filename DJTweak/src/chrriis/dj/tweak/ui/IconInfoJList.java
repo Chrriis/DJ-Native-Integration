@@ -97,7 +97,7 @@ public class IconInfoJList extends JList {
   protected static BufferedImage getScaledInstance(BufferedImage image, int targetWidth, int targetHeight) {
     int type = image.getTransparency() == Transparency.OPAQUE? BufferedImage.TYPE_INT_RGB: BufferedImage.TYPE_INT_ARGB;
     BufferedImage resultImage = image;
-    //Use multi-step technique
+    // Multi-step technique
     int width = image.getWidth();
     int height = image.getHeight();
     do {

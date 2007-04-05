@@ -139,7 +139,7 @@ public class VMArgumentsPanel extends JPanel {
     columnModel.getColumn(2).setPreferredWidth(300);
     adjustTable();
     centerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-    centerPanel.add(new JLabel("Note: Vendor and Version are regular expressions. When left empty, they match all."), BorderLayout.SOUTH);
+    centerPanel.add(new JLabel("Note: \"Vendor\" and \"Version\" are regular expressions. When undefined, they match all vendors/versions."), BorderLayout.SOUTH);
     add(centerPanel, BorderLayout.CENTER);
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0));
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
