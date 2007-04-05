@@ -56,7 +56,7 @@ public class JarPane extends JPanel {
     iconsPanel = new IconsPanel(djPane);
     tabbedPane.addTab("Icons", iconsPanel);
     attributesPanel = new AttributesPanel();
-    tabbedPane.addTab("Properties", attributesPanel);
+    tabbedPane.addTab("Attributes", attributesPanel);
     vmArgumentsPanel = new VMArgumentsPanel();
     tabbedPane.addTab("VM Arguments", vmArgumentsPanel);
     add(tabbedPane, BorderLayout.CENTER);
