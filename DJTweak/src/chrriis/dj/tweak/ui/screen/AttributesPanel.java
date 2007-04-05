@@ -20,17 +20,24 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.PlainDocument;
 
 import chrriis.dj.tweak.data.AttributeInfo;
 import chrriis.dj.tweak.data.JarFileInfo;
@@ -128,7 +135,25 @@ public class AttributesPanel extends JPanel {
     table.setModel(tableSorter);
     tableSorter.setTableHeader(table.getTableHeader());
     TableColumnModel columnModel = table.getColumnModel();
-    columnModel.getColumn(0).setPreferredWidth(50);
+    TableColumn column0 = columnModel.getColumn(0);
+    JTextField textField = new JTextField();
+    Component tableCellEditorComponent = table.getDefaultEditor(String.class).getTableCellEditorComponent(table, null, false, -1, -1);
+    textField.setBorder(((JComponent)tableCellEditorComponent).getBorder());
+    textField.setDocument(new PlainDocument() {
+      @Override
+      public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+        str = str.replaceAll("[^0-9a-zA-Z\\-_]", "");
+        try {
+          if((getText(0, getLength()) + str).getBytes("UTF-8").length <= 68) {
+            super.insertString(offs, str, a);
+          }
+        } catch(Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
+    column0.setCellEditor(new DefaultCellEditor(textField));
+    column0.setPreferredWidth(50);
     columnModel.getColumn(1).setPreferredWidth(300);
     adjustTable();
     centerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
