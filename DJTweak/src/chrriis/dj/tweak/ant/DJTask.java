@@ -5,16 +5,16 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ant;
+package chrriis.dj.tweak.ant;
 
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
-import chrriis.dj.data.IconInfo;
-import chrriis.dj.data.JarFileInfo;
-import chrriis.dj.data.VMArgsInfo;
+import chrriis.dj.tweak.data.IconInfo;
+import chrriis.dj.tweak.data.JarFileInfo;
+import chrriis.dj.tweak.data.VMArgumentsInfo;
 
 /**
  * @author Christopher Deckers
@@ -38,10 +38,10 @@ public class DJTask extends Task {
     this.icons = icons;
   }
   
-  protected VMArgs vmArgs;
+  protected VMArguments vmArguments;
 
-  public void addVmargs(VMArgs vmArgs) {
-    this.vmArgs = vmArgs;
+  public void addVmarguments(VMArguments vmArguments) {
+    this.vmArguments = vmArguments;
   }
   
   public void execute() throws BuildException {
@@ -67,17 +67,17 @@ public class DJTask extends Task {
         throw new BuildException(e);
       }
     }
-    VMArgsInfo[] vmArgsInfos = jarfileInfo.getVMArgsInfos();
-    if(vmArgs != null) {
+    VMArgumentsInfo[] vmArgumentsInfos = jarfileInfo.getVMArgumentsInfos();
+    if(vmArguments != null) {
       try {
-        vmArgsInfos = vmArgs.getVMArgsInfo(getProject(), jarfileInfo);
+        vmArgumentsInfos = vmArguments.getVMArgumentsInfo(getProject(), jarfileInfo);
       } catch(Exception e) {
         throw new BuildException(e);
       }
     }
     String toFilePath = toFile.getPath();
     System.out.println("Saving jar: " + toFilePath);
-    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, vmArgsInfos, toFile)) {
+    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, vmArgumentsInfos, toFile)) {
       throw new BuildException("The information could not be written to the file \"" + toFilePath + "\". The path may be invalid, or you may not have the necessary permissions.");
     }
   }

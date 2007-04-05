@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ui;
+package chrriis.dj.tweak.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -29,10 +29,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import chrriis.dj.data.JarFileInfo;
-import chrriis.dj.ui.screen.AttributesPanel;
-import chrriis.dj.ui.screen.IconsPanel;
-import chrriis.dj.ui.screen.VMArgsPanel;
+import chrriis.dj.tweak.data.JarFileInfo;
+import chrriis.dj.tweak.ui.screen.AttributesPanel;
+import chrriis.dj.tweak.ui.screen.IconsPanel;
+import chrriis.dj.tweak.ui.screen.VMArgumentsPanel;
 
 /**
  * @author Christopher Deckers
@@ -45,7 +45,7 @@ public class JarPane extends JPanel {
   protected JButton jarFileButton;
   protected IconsPanel iconsPanel;
   protected AttributesPanel attributesPanel;
-  protected VMArgsPanel vmArgsPanel;
+  protected VMArgumentsPanel vmArgumentsPanel;
   protected JButton saveButton;
   
   public JarPane(final DJPane djPane) {
@@ -57,8 +57,8 @@ public class JarPane extends JPanel {
     tabbedPane.addTab("Icons", iconsPanel);
     attributesPanel = new AttributesPanel();
     tabbedPane.addTab("Properties", attributesPanel);
-    vmArgsPanel = new VMArgsPanel();
-    tabbedPane.addTab("VM Args", vmArgsPanel);
+    vmArgumentsPanel = new VMArgumentsPanel();
+    tabbedPane.addTab("VM Arguments", vmArgumentsPanel);
     add(tabbedPane, BorderLayout.CENTER);
     JPanel southPanel = new JPanel(new BorderLayout(0, 0));
     GridBagLayout gridBag = new GridBagLayout();
@@ -114,7 +114,7 @@ public class JarPane extends JPanel {
       public void actionPerformed(ActionEvent e) {
         String outFileName = jarFileTextField.getText();
         File outFile = new File(outFileName);
-        if(jarFileInfo.saveInfos(attributesPanel.getAttributeInfos(), iconsPanel.getIconInfos(), vmArgsPanel.getVMArgsInfos(), outFile)) {
+        if(jarFileInfo.saveInfos(attributesPanel.getAttributeInfos(), iconsPanel.getIconInfos(), vmArgumentsPanel.getVMArgumentsInfos(), outFile)) {
           saveButton.setEnabled(false);
         } else {
           String reason = (outFile.exists()? "The file may be in use": "The path may be invalid") + ", or you may not have the necessary permissions.";
@@ -134,7 +134,7 @@ public class JarPane extends JPanel {
     };
     iconsPanel.addPropertyChangeListener(jarModificationPropertyChangeListener);
     attributesPanel.addPropertyChangeListener(jarModificationPropertyChangeListener);
-    vmArgsPanel.addPropertyChangeListener(jarModificationPropertyChangeListener);
+    vmArgumentsPanel.addPropertyChangeListener(jarModificationPropertyChangeListener);
     add(southPanel, BorderLayout.SOUTH);
     loadContent(null);
   }
@@ -176,7 +176,7 @@ public class JarPane extends JPanel {
     jarFileButton.setEnabled(isEnabled);
     iconsPanel.loadContent(jarFileInfo);
     attributesPanel.loadContent(jarFileInfo);
-    vmArgsPanel.loadContent(jarFileInfo);
+    vmArgumentsPanel.loadContent(jarFileInfo);
     saveButton.setEnabled(false);
   }
   

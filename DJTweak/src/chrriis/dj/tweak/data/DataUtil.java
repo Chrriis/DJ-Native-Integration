@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.data;
+package chrriis.dj.tweak.data;
 
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;

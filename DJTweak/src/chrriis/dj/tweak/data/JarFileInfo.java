@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.data;
+package chrriis.dj.tweak.data;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -44,14 +44,14 @@ public class JarFileInfo {
   protected String mainClassName;
   protected AttributeInfo[] attributeInfos;
   protected IconInfo[] iconInfos;
-  protected VMArgsInfo[] vmArgsInfos;
+  protected VMArgumentsInfo[] vmArgumentsInfos;
   protected String[] imagePaths;
   protected Manifest manifest;
   
   public static final String JAR_ICONS_PATH = "META-INF/JarIcons/";
   protected static final String META_INF_PATH = "META-INF/";
   protected static final String JAR_ICON_HEADER_PREFIX = "Jar-Icon-";
-  protected static final String VM_ARGS_HEADER = "VM-Args";
+  protected static final String VM_ARGUMENTS_HEADER = "VM-Arguments";
   
   protected JarFileInfo() {
   }
@@ -81,36 +81,43 @@ public class JarFileInfo {
         Attributes attributes = manifest.getMainAttributes();
         mainClassName = attributes.getValue(Attributes.Name.MAIN_CLASS);
         List<AttributeInfo> attributeInfoList = new ArrayList<AttributeInfo>();
-        List<VMArgsInfo> vmArgsInfoList = new ArrayList<VMArgsInfo>();
+        List<VMArgumentsInfo> vmArgumentsInfoList = new ArrayList<VMArgumentsInfo>();
         List<IconInfo> iconInfoList = new ArrayList<IconInfo>();
         for(Object key: attributes.keySet()) {
           Attributes.Name name = (Attributes.Name)key;
           String s = name.toString();
-          if(s.equals(VM_ARGS_HEADER)) {
-            try {
-              DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-              DocumentBuilder builder = factory.newDocumentBuilder();
-              Document document = builder.parse(new ByteArrayInputStream(attributes.getValue(s).getBytes("UTF-8")));
-              NodeList childNodes = document.getElementsByTagName("vmargs").item(0).getChildNodes();
-              for(int i=0; i<childNodes.getLength(); i++) {
-                Node node = childNodes.item(i);
-                if("pattern".equals(node.getNodeName())) {
-                  NamedNodeMap argsAttributes = node.getAttributes();
-                  Node item = argsAttributes.getNamedItem("vendor");
-                  String vendor = item == null? "": item.getNodeValue();
-                  item = argsAttributes.getNamedItem("version");
-                  String version = item == null? "": item.getNodeValue();
-                  item = argsAttributes.getNamedItem("args");
-                  if(item != null) {
-                    String args = item.getNodeValue();
-                    if(args.length() > 0) {
-                      vmArgsInfoList.add(new VMArgsInfo(vendor, version, args));
+          if(s.equals(VM_ARGUMENTS_HEADER)) {
+            String value = attributes.getValue(s).trim();
+            if(value.length() > 0) {
+              if(!value.startsWith("<")) {
+                vmArgumentsInfoList.add(new VMArgumentsInfo("", "", value));
+              } else {
+                try {
+                  DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                  DocumentBuilder builder = factory.newDocumentBuilder();
+                  Document document = builder.parse(new ByteArrayInputStream(value.getBytes("UTF-8")));
+                  NodeList childNodes = document.getElementsByTagName("vmarguments").item(0).getChildNodes();
+                  for(int i=0; i<childNodes.getLength(); i++) {
+                    Node node = childNodes.item(i);
+                    if("pattern".equals(node.getNodeName())) {
+                      NamedNodeMap argumentsAttributes = node.getAttributes();
+                      Node item = argumentsAttributes.getNamedItem("vendor");
+                      String vendor = item == null? "": item.getNodeValue();
+                      item = argumentsAttributes.getNamedItem("version");
+                      String version = item == null? "": item.getNodeValue();
+                      item = argumentsAttributes.getNamedItem("arguments");
+                      if(item != null) {
+                        String arguments = item.getNodeValue();
+                        if(arguments.length() > 0) {
+                          vmArgumentsInfoList.add(new VMArgumentsInfo(vendor, version, arguments));
+                        }
+                      }
                     }
                   }
+                } catch(Exception e) {
+                  e.printStackTrace();
                 }
-              }
-            } catch(Exception e) {
-              e.printStackTrace();
+            }
             }
           } else if(s.startsWith(JAR_ICON_HEADER_PREFIX)) {
             String[] sizes = s.substring(JAR_ICON_HEADER_PREFIX.length()).split("x");
@@ -128,7 +135,7 @@ public class JarFileInfo {
         }
         attributeInfos = attributeInfoList.toArray(new AttributeInfo[0]);
         iconInfos = iconInfoList.toArray(new IconInfo[0]);
-        vmArgsInfos = vmArgsInfoList.toArray(new VMArgsInfo[0]);
+        vmArgumentsInfos = vmArgumentsInfoList.toArray(new VMArgumentsInfo[0]);
       }
       jarFile.close();
       return true;
@@ -162,8 +169,8 @@ public class JarFileInfo {
     return iconInfos;
   }
   
-  public VMArgsInfo[] getVMArgsInfos() {
-    return vmArgsInfos;
+  public VMArgumentsInfo[] getVMArgumentsInfos() {
+    return vmArgumentsInfos;
   }
   
   public String[] getImagePaths() {
@@ -184,7 +191,7 @@ public class JarFileInfo {
     }
   }
   
-  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, VMArgsInfo[] vmArgsInfos, File outFile) {
+  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, VMArgumentsInfo[] vmArgumentsInfos, File outFile) {
     boolean isSuccess = false;
     if(manifest == null) {
       manifest = new Manifest();
@@ -209,17 +216,33 @@ public class JarFileInfo {
           }
         }
       }
-      if(vmArgsInfos.length > 0) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<vmargs>");
-        for(VMArgsInfo vmArgsInfo: vmArgsInfos) {
-          String args = vmArgsInfo.getArgs();
-          if(args.length() > 0) {
-            sb.append("<pattern vendor=\"").append(DataUtil.escapeXML(vmArgsInfo.getVendor())).append("\" version=\"").append(DataUtil.escapeXML(vmArgsInfo.getVersion())).append("\" args=\"").append(DataUtil.escapeXML(args)).append("\"/>");
+      if(vmArgumentsInfos.length > 0) {
+        if(vmArgumentsInfos.length == 1 && vmArgumentsInfos[0].getVendor().length() == 0 && vmArgumentsInfos[0].getVersion().length() == 0) {
+          String arguments = vmArgumentsInfos[0].getArguments();
+          if(arguments.length() > 0) {
+            attributes.putValue(VM_ARGUMENTS_HEADER, arguments);
           }
+        } else {
+          StringBuilder sb = new StringBuilder();
+          sb.append("<vmarguments>");
+          for(VMArgumentsInfo vmArgumentsInfo: vmArgumentsInfos) {
+            String arguments = vmArgumentsInfo.getArguments();
+            if(arguments.length() > 0) {
+              String vendor = vmArgumentsInfo.getVendor();
+              String version = vmArgumentsInfo.getVersion();
+              sb.append("<pattern ");
+              if(vendor.length() > 0) {
+                sb.append("vendor=\"").append(DataUtil.escapeXML(vendor)).append("\" ");
+              }
+              if(version.length() > 0) {
+                sb.append("version=\"").append(DataUtil.escapeXML(version)).append("\" ");
+              }
+              sb.append("arguments=\"").append(DataUtil.escapeXML(arguments)).append("\"/>");
+            }
+          }
+          sb.append("</vmarguments>");
+          attributes.putValue(VM_ARGUMENTS_HEADER, sb.toString());
         }
-        sb.append("</vmargs>");
-        attributes.putValue(VM_ARGS_HEADER, sb.toString());
       }
       if(outFile != null && sourceFile.getAbsolutePath().equals(outFile.getAbsolutePath())) {
         outFile = null;

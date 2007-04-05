@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ui;
+package chrriis.dj.tweak.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;

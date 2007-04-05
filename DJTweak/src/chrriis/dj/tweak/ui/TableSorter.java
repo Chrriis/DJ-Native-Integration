@@ -1,4 +1,4 @@
-package chrriis.dj.ui;
+package chrriis.dj.tweak.ui;
 
 import java.awt.Color;
 import java.awt.Component;

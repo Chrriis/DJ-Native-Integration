@@ -25,7 +25,7 @@ Alternatively, you can use DJ Tweak's Ant task. Here is an example:
 
 <project name="Sample build script" default="configureJar">
   <target name="configureJar" description="Configure the JAR file icons">
-    <taskdef resource="chrriis/dj/ant/task.properties" classpath="DJTweak.jar"/>
+    <taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="DJTweak.jar"/>
     <dj file="MyJARFile.jar" tofile="MyJARFileWithIcons.jar">
       <icons>
         <internalset>

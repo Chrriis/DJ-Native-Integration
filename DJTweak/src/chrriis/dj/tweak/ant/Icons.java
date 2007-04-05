@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ant;
+package chrriis.dj.tweak.ant;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -24,9 +24,9 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 
-import chrriis.dj.data.DataUtil;
-import chrriis.dj.data.IconInfo;
-import chrriis.dj.data.JarFileInfo;
+import chrriis.dj.tweak.data.DataUtil;
+import chrriis.dj.tweak.data.IconInfo;
+import chrriis.dj.tweak.data.JarFileInfo;
 
 /**
  * @author Christopher Deckers

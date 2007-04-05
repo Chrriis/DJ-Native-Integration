@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ui;
+package chrriis.dj.tweak.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
@@ -33,7 +33,7 @@ import javax.swing.UIManager;
  */
 public class DJFrame extends JFrame {
 
-  public DJFrame() {
+  public DJFrame(File jarFile) {
     super("DJ Tweak");
     if(System.getProperty("java.version").compareTo("1.6") >= 0) {
       setIconImages(Arrays.asList(new Image[] {
@@ -80,13 +80,10 @@ public class DJFrame extends JFrame {
         }
       }
       protected boolean isFileListValid(List<File> fileList) {
-        for(File file: fileList) {
-          String lcName = file.getName().toLowerCase(Locale.ENGLISH);
-          if(!lcName.endsWith(".jar")) {
-            return false;
-          }
+        if(fileList.size() != 1) {
+          return false;
         }
-        return fileList.size() == 1;
+        return fileList.get(0).getName().toLowerCase(Locale.ENGLISH).endsWith(".jar");
       }
     }));
     JMenuBar menuBar = new JMenuBar();
@@ -127,6 +124,9 @@ public class DJFrame extends JFrame {
     getContentPane().add(djPane, BorderLayout.CENTER);
     setSize(600, 400);
     setLocationByPlatform(true);
+    if(jarFile != null) {
+      djPane.loadJarFile(jarFile);
+    }
   }
   
   public static void main(String[] args) {
@@ -135,7 +135,13 @@ public class DJFrame extends JFrame {
     } catch(Exception e) {
       e.printStackTrace();
     }
-    new DJFrame().setVisible(true);
+    File jarFile;
+    if(args.length > 0) {
+      jarFile = new File(args[0]);
+    } else {
+      jarFile = null;
+    }
+    new DJFrame(jarFile).setVisible(true);
   }
 
 }

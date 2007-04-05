@@ -6,22 +6,22 @@
 		<jar duplicate="preserve" destfile="Release/DJLib.jar">
 			<fileset dir="bin"/>
 			<manifest>
-				<attribute name="Main-Class" value="chrriis.dj.ui.DJFrame"/>
+				<attribute name="Main-Class" value="chrriis.dj.tweak.ui.DJFrame"/>
 			</manifest>
 		</jar>
-	  <taskdef resource="chrriis/dj/ant/task.properties" classpath="Release/DJLib.jar"/>
+	  <taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="Release/DJLib.jar"/>
 	  <dj file="Release/DJLib.jar" tofile="Release/DJTweak.jar">
 	  	<icons>
 		  	<internalset>
-		  		<include name="chrriis/dj/ui/resource/DJTweak??x??.png"/>
+		  		<include name="chrriis/dj/tweak/ui/resource/DJTweak??x??.png"/>
 	  		</internalset>
 		  	<!--externalset dir="icons">
 	        <include name="**/*.*"/>
 				</externalset-->
 	  	</icons>
-      <!--vmargs>
-        <pattern vendor="Sun .*" version="1\.[^01234].*" args="-DSomeProperty=SomeValue"/>
-      </vmargs-->
+      <vmarguments>
+        <pattern vendor="Sun .*" version="1\.[^01234].*" arguments="-DSomeProperty=SomeValue"/>
+      </vmarguments>
 	  </dj>
 	</target>
 

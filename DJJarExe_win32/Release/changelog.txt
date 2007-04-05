@@ -7,6 +7,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 * Version 1.001 (xxxxxxxxxxxxx):
 
+- VM args can be read from the JAR file.
 - Jar files are executed as different processes.
 - Executable Jar files appear with their name in the task manager.
 - Task bar aggregation shows the JAR file name when launching multiple times.

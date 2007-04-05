@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ui;
+package chrriis.dj.tweak.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,8 +13,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Arrays;
@@ -33,9 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import chrriis.dj.data.IconInfo;
-import chrriis.dj.data.JarFileInfo;
-import chrriis.dj.data.DataUtil;
+import chrriis.dj.tweak.data.DataUtil;
+import chrriis.dj.tweak.data.IconInfo;
+import chrriis.dj.tweak.data.JarFileInfo;
 
 /**
  * @author Christopher Deckers
@@ -76,6 +78,7 @@ public class IconInfoJList extends JList {
     Graphics g = image.getGraphics();
     int w = Math.round(iconWidth / ratio);
     int h = Math.round(iconHeight / ratio);
+    ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
     g.drawImage(imageIcon.getImage(), (ICON_WIDTH - w) / 2, (ICON_HEIGHT - h) / 2, w, h, null);
     g.dispose();
     icon = new ImageIcon(image);

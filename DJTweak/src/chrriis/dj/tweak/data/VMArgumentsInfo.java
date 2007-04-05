@@ -1,18 +1,18 @@
-package chrriis.dj.data;
+package chrriis.dj.tweak.data;
 
 /**
  * @author Christopher Deckers
  */
-public class VMArgsInfo {
+public class VMArgumentsInfo {
 
   protected String vendor;
   protected String version;
-  protected String args;
+  protected String arguments;
   
-  public VMArgsInfo(String vendor, String version, String args) {
+  public VMArgumentsInfo(String vendor, String version, String arguments) {
     this.vendor = vendor;
     this.version = version;
-    this.args = args;
+    this.arguments = arguments;
   }
   
   public String getVendor() {
@@ -31,12 +31,12 @@ public class VMArgsInfo {
     this.version = version;
   }
   
-  public String getArgs() {
-    return args;
+  public String getArguments() {
+    return arguments;
   }
   
-  public void setArgs(String args) {
-    this.args = args;
+  public void setArguments(String arguments) {
+    this.arguments = arguments;
   }
   
 }

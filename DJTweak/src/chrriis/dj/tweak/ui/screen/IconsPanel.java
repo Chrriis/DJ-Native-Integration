@@ -5,7 +5,7 @@
  * See the file "readme.txt" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
-package chrriis.dj.ui.screen;
+package chrriis.dj.tweak.ui.screen;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
@@ -44,12 +44,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import chrriis.dj.data.DataUtil;
-import chrriis.dj.data.IconInfo;
-import chrriis.dj.data.JarFileInfo;
-import chrriis.dj.ui.DJPane;
-import chrriis.dj.ui.IconInfoJList;
-import chrriis.dj.ui.UIUtil;
+import chrriis.dj.tweak.data.DataUtil;
+import chrriis.dj.tweak.data.IconInfo;
+import chrriis.dj.tweak.data.JarFileInfo;
+import chrriis.dj.tweak.ui.DJPane;
+import chrriis.dj.tweak.ui.IconInfoJList;
+import chrriis.dj.tweak.ui.UIUtil;
 
 /**
  * @author Christopher Deckers
