@@ -12,12 +12,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -44,7 +46,16 @@ import chrriis.dj.tweak.data.JarFileInfo;
  */
 public class IconInfoJList extends JList {
 
-  protected static final ImageIcon MISSING_IMAGE_ICON = new ImageIcon(IconInfoJList.class.getResource("resource/MissingImage16x16.png"));
+  protected static final BufferedImage MISSING_IMAGE;
+  static {
+    BufferedImage image = null;
+    try {
+      image = ImageIO.read(new ByteArrayInputStream(DataUtil.getImageData(IconInfoJList.class.getResource("resource/MissingImage16x16.png"))));
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+    MISSING_IMAGE = image;
+  }
   
   protected static final int ICON_WIDTH = 32;
   protected static final int ICON_HEIGHT = 32;
@@ -56,36 +67,62 @@ public class IconInfoJList extends JList {
     if(icon != null) {
       return icon;
     }
-    ImageIcon imageIcon;
-    if(resourceURL != null) {
-      imageIcon = new ImageIcon(resourceURL);
-    } else {
-      try {
+    BufferedImage image;
+    try {
+      if(resourceURL != null) {
+        image = ImageIO.read(resourceURL);
+      } else {
         byte[] imageData = DataUtil.getImageData(jarFileInfo.getImageURL(imagePath));
-        imageIcon = new ImageIcon(imageData);
-      } catch(Exception e) {
-        imageIcon = MISSING_IMAGE_ICON;
+        image = ImageIO.read(new ByteArrayInputStream(imageData));
       }
+    } catch(Exception e) {
+      image = MISSING_IMAGE;
     }
-    int iconWidth = imageIcon.getIconWidth();
-    int iconHeight = imageIcon.getIconHeight();
+    if(image == null) {
+      // Missing image is not suppose to be null...
+      return null;
+    }
+    int iconWidth = image.getWidth();
+    int iconHeight = image.getHeight();
     if(iconWidth <= ICON_WIDTH && iconHeight <= ICON_HEIGHT) {
-      pathToIconCachedMap.put(imagePath, imageIcon);
-      return imageIcon;
+      icon = new ImageIcon(image);
+    } else {
+      image = getScaledInstance(image, ICON_WIDTH, ICON_HEIGHT);
+      icon = new ImageIcon(image);
     }
-    float ratio = Math.max(iconWidth / (float)ICON_WIDTH, iconHeight / (float)ICON_HEIGHT);
-    BufferedImage image = new BufferedImage(ICON_WIDTH, ICON_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-    Graphics g = image.getGraphics();
-    int w = Math.round(iconWidth / ratio);
-    int h = Math.round(iconHeight / ratio);
-    ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-    g.drawImage(imageIcon.getImage(), (ICON_WIDTH - w) / 2, (ICON_HEIGHT - h) / 2, w, h, null);
-    g.dispose();
-    icon = new ImageIcon(image);
     pathToIconCachedMap.put(imagePath, icon);
     return icon;
   }
   
+  protected static BufferedImage getScaledInstance(BufferedImage image, int targetWidth, int targetHeight) {
+    int type = image.getTransparency() == Transparency.OPAQUE? BufferedImage.TYPE_INT_RGB: BufferedImage.TYPE_INT_ARGB;
+    BufferedImage resultImage = image;
+    //Use multi-step technique
+    int width = image.getWidth();
+    int height = image.getHeight();
+    do {
+      if(width > targetWidth) {
+        width /= 2;
+        if(width < targetWidth) {
+          width = targetWidth;
+        }
+      }
+      if(height > targetHeight) {
+        height /= 2;
+        if(height < targetHeight) {
+          height = targetHeight;
+        }
+      }
+      BufferedImage tmpImage = new BufferedImage(width, height, type);
+      Graphics2D g2 = tmpImage.createGraphics();
+      g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+      g2.drawImage(resultImage, 0, 0, width, height, null);
+      g2.dispose();
+      resultImage = tmpImage;
+    } while(width != targetWidth || height != targetHeight);
+    return resultImage;
+  }
+
   protected static IconInfo[] sort(IconInfo[] iconInfos) {
     iconInfos = iconInfos.clone();
     Arrays.sort(iconInfos, new Comparator<IconInfo>() {
