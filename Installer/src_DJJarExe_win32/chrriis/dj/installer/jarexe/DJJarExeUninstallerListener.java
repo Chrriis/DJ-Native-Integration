@@ -37,6 +37,12 @@ public class DJJarExeUninstallerListener extends SimpleUninstallerListener {
         }
       }
     }
+    keyPath = "jarfile\\shell\\openinshell\\command";
+    if(rh.keyExist(keyPath)) {
+      rh.deleteKey(keyPath);
+      keyPath = "jarfile\\shell\\openinshell";
+      rh.deleteKey(keyPath);
+    }
   }
 
   public static void main(String[] args) {

@@ -70,20 +70,20 @@
     </pack>
     <pack name="DJ ShellExtension" required="no">
       <os family="windows"/>
-      <description>Extension that provides icon support and extended properties for Jar files.</description>
+      <description>Extension that provides icon support for Jar files, and a view of their manifest attributes from their properties.</description>
       <file src="../DJShellExtension_win32/Release/DJShellExtension.dll" targetdir="$INSTALL_PATH/DJ ShellExtension"/>
       <file src="../DJShellExtension_win32/Release/readme.txt" targetdir="$INSTALL_PATH/DJ ShellExtension"/>
       <file src="../DJShellExtension_win32/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ ShellExtension"/>
     </pack>
     <pack name="DJ JarExe" required="no">
       <os family="windows"/>
-      <description>Make executable Jar files different processes, identifiable in Windows task manager.</description>
+      <description>Extension to make executable Jar files different processes, identifiable in the task manager. It also adds the ability to launch the Jar file from a shell, accessible from the Jar file's context menu.</description>
       <file src="../DJJarExe_win32/Release/DJJarExe.jar" targetdir="$INSTALL_PATH/DJ JarExe"/>
       <file src="../DJJarExe_win32/Release/readme.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>
       <file src="../DJJarExe_win32/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>
     </pack>
     <pack name="DJ Tweak" required="no">
-      <description>Utility to tweak Jar files, like changing their icon. This is both a graphical tool and an Ant task.</description>
+      <description>Utility to tweak Jar files. It allows to change their icon, or to specify some VM arguments to use when they are launched. This is both a graphical tool and an Ant task.</description>
       <file src="../DJTweak/Release/DJTweak.jar" targetdir="$INSTALL_PATH/DJ Tweak"/>
       <file src="../DJTweak/Release/readme.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>
       <file src="../DJTweak/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>

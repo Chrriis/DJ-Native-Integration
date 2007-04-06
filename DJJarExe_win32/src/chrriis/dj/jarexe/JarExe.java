@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -34,30 +35,36 @@ import org.w3c.dom.NodeList;
 public class JarExe {
 
   protected static final String PID_PROPERTY = "dj.jarexe.pid";
-  protected static final String EXE_PROPERTY = "dj.jarexe.exe";
-  protected static final String VM_ARGUMENTS_HEADER = "VM-Arguments";
+  protected static final String CONSOLE_PROPERTY = "dj.jarexe.console";
+  protected static final String VM_PROPERTY = "dj.jarexe.vm";
+  protected static final String VM_ARGS_HEADER = "VM-Args";
 
-  public JarExe(String[] arguments) {
+  public JarExe(String[] args) {
     String tmpDirPath = System.getProperty("java.io.tmpdir") + "/.djjarexe";
     File tmpDir = new File(tmpDirPath);
     // Check argument validity
-    if(arguments.length < 1) {
+    if(args.length < 1) {
       tmpDir.delete();
       throw new IllegalArgumentException("There must be at least one argument which is the path to the JAR file!");
     }
-    String jarFilePath = arguments[0];
+    boolean isConsole = "true".equals(System.getProperty(CONSOLE_PROPERTY));
+    String javaHome = System.getProperty("java.home");
+    String vm = System.getProperty(VM_PROPERTY, javaHome + "\\bin\\java.exe");
+    String jarFilePath = args[0];
     File jarFile = new File(jarFilePath);
-    String jarFileParentPath = jarFile.getParentFile().getAbsolutePath().replace('/', '_').replace('\\', '_').replace(':', '_');
+    String jarFileParentPath = jarFile.getParentFile().getAbsolutePath().replaceAll("[/\\\\:&()\\[\\]\\{\\}^=;!\'+,`~ \"]", "_");
     String pid = System.getProperty(PID_PROPERTY);
     if(pid != null) {
       jarFileParentPath += pid;
     }
+    if(isConsole) {
+      cleanUp(tmpDir);
+    }
     File exeFile = new File(tmpDir, jarFileParentPath + "/" + jarFile.getName());
-    String javaHome = System.getProperty("java.home");
     if(!exeFile.exists() || exeFile.delete()) {
       exeFile.getParentFile().mkdirs();
       try {
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(javaHome + "\\bin\\javaw.exe"));
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(vm));
         // Start of new implementation that removes the process description, which makes the shell default to the name of the process
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] bytes = new byte[8192];
@@ -120,29 +127,119 @@ public class JarExe {
       }
     }
     if(!exeFile.exists()) {
-      exeFile = new File(javaHome + "\\bin\\javaw.exe");
+      exeFile = new File(vm);
     }
-    String[] vmArguments = getVMArguments(jarFile);
+    if(isConsole) {
+      try {
+        File batFile = new File(tmpDir, jarFileParentPath + "/a.bat");
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(batFile));
+        String lineSeparator = System.getProperty("line.separator");
+        StringBuilder batSB = new StringBuilder();
+        StringBuilder commandSB = new StringBuilder();
+        batSB.append("@echo off").append(lineSeparator);
+        batSB.append("cd \\").append(lineSeparator);
+        String workindirPath = escapeParameter(jarFile.getParentFile().getAbsolutePath());
+        batSB.append("cd /D ").append(workindirPath).append(lineSeparator);
+        batSB.append("title ").append("DJ Console").append(lineSeparator);
+        batSB.append("echo ------------------------ DJ Console ------------------------").append(lineSeparator);
+        batSB.append("echo ").append(escapeParameter(new File(vm).getAbsolutePath()));
+        for(String arg: getVMArgs(jarFile)) {
+          commandSB.append(' ').append(escapeParameter(arg));
+        }
+        commandSB.append(" -jar");
+        for(String arg: args) {
+          commandSB.append(' ').append(escapeParameter(arg));
+        }
+        batSB.append(commandSB.toString()).append(lineSeparator);
+        batSB.append("echo ------------------------------------------------------------").append(lineSeparator);
+        batSB.append(escapeParameter(exeFile.getAbsolutePath())).append(commandSB.toString()).append(lineSeparator);
+        out.write(batSB.toString().getBytes());
+        try {
+          out.close();
+        } catch(Exception e) {
+          e.printStackTrace();
+        }
+        try {
+          ProcessBuilder processBuilder = new ProcessBuilder(new String[] {"cmd.exe", "/C", "start", "cmd.exe", "/K", batFile.getAbsolutePath()});
+          processBuilder.environment().put("JAVA_HOME", javaHome);
+          processBuilder.directory(batFile.getParentFile());
+          processBuilder.start();
+          return;
+        } catch(Exception e) {
+          e.printStackTrace();
+        }
+      } catch(Exception e) {
+        e.printStackTrace();
+      }
+    }
+    // If we are in console mode, then it means the temp batch file method failed and we are going to invoke the shell directly.
+    String[] commandArgs;
+    if(isConsole) {
+      commandArgs = new String[] {"cmd.exe", "/C", "start", "cmd.exe", "/K", "call", exeFile.getAbsolutePath()};
+    } else {
+      commandArgs = new String[] {exeFile.getAbsolutePath()};
+    }
+    String[] vmArgs = getVMArgs(jarFile);
     // Run the new exe file
-    String[] newArguments = new String[2 + vmArguments.length + arguments.length];
-    newArguments[0] = exeFile.getAbsolutePath();
-    System.arraycopy(vmArguments, 0, newArguments, 1, vmArguments.length);
-    newArguments[1 + vmArguments.length] = "-jar";
-    System.arraycopy(arguments, 0, newArguments, 2 + vmArguments.length, arguments.length);
-    arguments = newArguments;
+    String[] newArgs = new String[commandArgs.length + 1 + vmArgs.length + args.length];
+    System.arraycopy(commandArgs, 0, newArgs, 0, commandArgs.length);
+    System.arraycopy(vmArgs, 0, newArgs, commandArgs.length, vmArgs.length);
+    newArgs[commandArgs.length + vmArgs.length] = "-jar";
+    System.arraycopy(args, 0, newArgs, commandArgs.length + vmArgs.length + 1, args.length);
+    args = newArgs;
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(arguments);
+      ProcessBuilder processBuilder = new ProcessBuilder(args);
       processBuilder.environment().put("JAVA_HOME", javaHome);
       processBuilder.directory(jarFile.getParentFile());
       processBuilder.start();
     } catch(Exception e) {
       e.printStackTrace();
     }
-    // Cleanup
-    cleanUp(tmpDir);
+    if(!isConsole) {
+      cleanUp(tmpDir);
+    }
   }
   
-  protected String[] getVMArguments(File jarFile) {
+  protected static String escapeParameter(String parameter) {
+    // characters supposedly to escape are: &()[]{}^=;!'+,`~ "
+    StringBuilder sb = new StringBuilder();
+    boolean isEscaping = false;
+    int length = parameter.length();
+    for(int i=0; i<length; i++) {
+      char c = parameter.charAt(i);
+      switch(c) {
+        case ' ':
+        case '&':
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '{':
+        case '}':
+        case '^':
+//        case '=':
+        case ';':
+        case '!':
+        case '\'':
+        case '+':
+        case ',':
+        case '`':
+        case '~':
+          isEscaping = true;
+          break;
+        case '"':
+          sb.append(c);
+          break;
+      }
+      sb.append(c);
+    }
+    if(!isEscaping) {
+      return sb.toString();
+    }
+    return '"' + sb.toString() + '"';
+  }
+  
+  protected static String[] getVMArgs(File jarFile) {
     try {
       StringBuilder sb = new StringBuilder();
       Manifest manifest = new JarFile(jarFile).getManifest();
@@ -150,26 +247,26 @@ public class JarExe {
       for(Object key: attributes.keySet()) {
         Attributes.Name name = (Attributes.Name)key;
         String s = name.toString();
-        if(s.equals(VM_ARGUMENTS_HEADER)) {
-          String arguments = attributes.getValue(s).trim();
-          if(arguments.length() > 0) {
-            if(!arguments.startsWith("<")) {
-              sb.append(arguments);
+        if(s.equals(VM_ARGS_HEADER)) {
+          String args = attributes.getValue(s).trim();
+          if(args.length() > 0) {
+            if(!args.startsWith("<")) {
+              sb.append(args);
             } else {
               try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(new ByteArrayInputStream(arguments.getBytes("UTF-8")));
-                NodeList childNodes = document.getElementsByTagName("vmarguments").item(0).getChildNodes();
+                Document document = builder.parse(new ByteArrayInputStream(args.getBytes("UTF-8")));
+                NodeList childNodes = document.getElementsByTagName("vmargs").item(0).getChildNodes();
                 for(int i=0; i<childNodes.getLength(); i++) {
                   Node node = childNodes.item(i);
                   if("pattern".equals(node.getNodeName())) {
-                    NamedNodeMap argumentsAttributes = node.getAttributes();
-                    Node item = argumentsAttributes.getNamedItem("vendor");
+                    NamedNodeMap argsAttributes = node.getAttributes();
+                    Node item = argsAttributes.getNamedItem("vendor");
                     String vendor = item == null? "": item.getNodeValue();
-                    item = argumentsAttributes.getNamedItem("version");
+                    item = argsAttributes.getNamedItem("version");
                     String version = item == null? "": item.getNodeValue();
-                    item = argumentsAttributes.getNamedItem("arguments");
+                    item = argsAttributes.getNamedItem("args");
                     if(item != null) {
                       String jVendor = System.getProperty("java.vendor");
                       String jVersion = System.getProperty("java.version");

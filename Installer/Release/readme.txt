@@ -13,6 +13,18 @@ on the desktop.
 The main focus is on making rich client Java applications first class citizens
 of the operating system.
 
+The DJ Project brings:
+- Proper icon support for Jar files, with different icons to differentiate
+  libraries and applications. The icons can be customized.
+- The ability to run executable Jar files as real processes. See their name in
+  the task manager, and have a proper task bar aggregation per program.
+- Configuration of the default Virtual Machine arguments that an executable Jar
+  file should use. Multiple sets of arguments can be defined to allow per vendor and/or runtime version configuration.
+- The Tweak utility, to customize all the aspects described above, using its Ant
+  task or its graphical user interface.
+- An "Open in Shell" command in the contextual menu of a Jar file to launch it
+  from a visible shell.
+- A view of the manifest attributes of a Jar file from its properties.
 
 2. How to use it?
 

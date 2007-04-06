@@ -44,14 +44,14 @@ public class JarFileInfo {
   protected String mainClassName;
   protected AttributeInfo[] attributeInfos;
   protected IconInfo[] iconInfos;
-  protected VMArgumentsInfo[] vmArgumentsInfos;
+  protected VMArgsInfo[] vmArgsInfos;
   protected String[] imagePaths;
   protected Manifest manifest;
   
   public static final String JAR_ICONS_PATH = "META-INF/JarIcons/";
   protected static final String META_INF_PATH = "META-INF/";
   protected static final String JAR_ICON_HEADER_PREFIX = "Jar-Icon-";
-  protected static final String VM_ARGUMENTS_HEADER = "VM-Arguments";
+  protected static final String VM_ARGS_HEADER = "VM-Args";
   
   protected JarFileInfo() {
   }
@@ -81,35 +81,35 @@ public class JarFileInfo {
         Attributes attributes = manifest.getMainAttributes();
         mainClassName = attributes.getValue(Attributes.Name.MAIN_CLASS);
         List<AttributeInfo> attributeInfoList = new ArrayList<AttributeInfo>();
-        List<VMArgumentsInfo> vmArgumentsInfoList = new ArrayList<VMArgumentsInfo>();
+        List<VMArgsInfo> vmArgsInfoList = new ArrayList<VMArgsInfo>();
         List<IconInfo> iconInfoList = new ArrayList<IconInfo>();
         for(Object key: attributes.keySet()) {
           Attributes.Name name = (Attributes.Name)key;
           String s = name.toString();
-          if(s.equals(VM_ARGUMENTS_HEADER)) {
+          if(s.equals(VM_ARGS_HEADER)) {
             String value = attributes.getValue(s).trim();
             if(value.length() > 0) {
               if(!value.startsWith("<")) {
-                vmArgumentsInfoList.add(new VMArgumentsInfo("", "", value));
+                vmArgsInfoList.add(new VMArgsInfo("", "", value));
               } else {
                 try {
                   DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                   DocumentBuilder builder = factory.newDocumentBuilder();
                   Document document = builder.parse(new ByteArrayInputStream(value.getBytes("UTF-8")));
-                  NodeList childNodes = document.getElementsByTagName("vmarguments").item(0).getChildNodes();
+                  NodeList childNodes = document.getElementsByTagName("vmargs").item(0).getChildNodes();
                   for(int i=0; i<childNodes.getLength(); i++) {
                     Node node = childNodes.item(i);
                     if("pattern".equals(node.getNodeName())) {
-                      NamedNodeMap argumentsAttributes = node.getAttributes();
-                      Node item = argumentsAttributes.getNamedItem("vendor");
+                      NamedNodeMap argsAttributes = node.getAttributes();
+                      Node item = argsAttributes.getNamedItem("vendor");
                       String vendor = item == null? "": item.getNodeValue();
-                      item = argumentsAttributes.getNamedItem("version");
+                      item = argsAttributes.getNamedItem("version");
                       String version = item == null? "": item.getNodeValue();
-                      item = argumentsAttributes.getNamedItem("arguments");
+                      item = argsAttributes.getNamedItem("args");
                       if(item != null) {
-                        String arguments = item.getNodeValue();
-                        if(arguments.length() > 0) {
-                          vmArgumentsInfoList.add(new VMArgumentsInfo(vendor, version, arguments));
+                        String args = item.getNodeValue();
+                        if(args.length() > 0) {
+                          vmArgsInfoList.add(new VMArgsInfo(vendor, version, args));
                         }
                       }
                     }
@@ -135,7 +135,7 @@ public class JarFileInfo {
         }
         attributeInfos = attributeInfoList.toArray(new AttributeInfo[0]);
         iconInfos = iconInfoList.toArray(new IconInfo[0]);
-        vmArgumentsInfos = vmArgumentsInfoList.toArray(new VMArgumentsInfo[0]);
+        vmArgsInfos = vmArgsInfoList.toArray(new VMArgsInfo[0]);
       }
       jarFile.close();
       return true;
@@ -169,8 +169,8 @@ public class JarFileInfo {
     return iconInfos;
   }
   
-  public VMArgumentsInfo[] getVMArgumentsInfos() {
-    return vmArgumentsInfos;
+  public VMArgsInfo[] getVMArgsInfos() {
+    return vmArgsInfos;
   }
   
   public String[] getImagePaths() {
@@ -191,7 +191,7 @@ public class JarFileInfo {
     }
   }
   
-  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, VMArgumentsInfo[] vmArgumentsInfos, File outFile) {
+  public boolean saveInfos(AttributeInfo[] attributeInfos, IconInfo[] iconInfos, VMArgsInfo[] vmArgsInfos, File outFile) {
     boolean isSuccess = false;
     if(manifest == null) {
       manifest = new Manifest();
@@ -216,20 +216,20 @@ public class JarFileInfo {
           }
         }
       }
-      if(vmArgumentsInfos.length > 0) {
-        if(vmArgumentsInfos.length == 1 && vmArgumentsInfos[0].getVendor().length() == 0 && vmArgumentsInfos[0].getVersion().length() == 0) {
-          String arguments = vmArgumentsInfos[0].getArguments();
-          if(arguments.length() > 0) {
-            attributes.putValue(VM_ARGUMENTS_HEADER, arguments);
+      if(vmArgsInfos.length > 0) {
+        if(vmArgsInfos.length == 1 && vmArgsInfos[0].getVendor().length() == 0 && vmArgsInfos[0].getVersion().length() == 0) {
+          String args = vmArgsInfos[0].getArgs();
+          if(args.length() > 0) {
+            attributes.putValue(VM_ARGS_HEADER, args);
           }
         } else {
           StringBuilder sb = new StringBuilder();
-          sb.append("<vmarguments>");
-          for(VMArgumentsInfo vmArgumentsInfo: vmArgumentsInfos) {
-            String arguments = vmArgumentsInfo.getArguments();
-            if(arguments.length() > 0) {
-              String vendor = vmArgumentsInfo.getVendor();
-              String version = vmArgumentsInfo.getVersion();
+          sb.append("<vmargs>");
+          for(VMArgsInfo vmArgsInfo: vmArgsInfos) {
+            String args = vmArgsInfo.getArgs();
+            if(args.length() > 0) {
+              String vendor = vmArgsInfo.getVendor();
+              String version = vmArgsInfo.getVersion();
               sb.append("<pattern ");
               if(vendor.length() > 0) {
                 sb.append("vendor=\"").append(DataUtil.escapeXML(vendor)).append("\" ");
@@ -237,11 +237,11 @@ public class JarFileInfo {
               if(version.length() > 0) {
                 sb.append("version=\"").append(DataUtil.escapeXML(version)).append("\" ");
               }
-              sb.append("arguments=\"").append(DataUtil.escapeXML(arguments)).append("\"/>");
+              sb.append("args=\"").append(DataUtil.escapeXML(args)).append("\"/>");
             }
           }
-          sb.append("</vmarguments>");
-          attributes.putValue(VM_ARGUMENTS_HEADER, sb.toString());
+          sb.append("</vmargs>");
+          attributes.putValue(VM_ARGS_HEADER, sb.toString());
         }
       }
       if(outFile != null && sourceFile.getAbsolutePath().equals(outFile.getAbsolutePath())) {

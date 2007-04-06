@@ -10,5 +10,6 @@ Licence terms: GPL v2 (see licence.txt)
 - VM args can be read from the JAR file.
 - Jar files are executed as different processes.
 - Executable Jar files appear with their name in the task manager.
+- The JAR file can be opened with a console or UI-less.
 - Task bar aggregation shows the JAR file name when launching multiple times.
 - Possibility to make the same JAR file launched as different processes (pid)

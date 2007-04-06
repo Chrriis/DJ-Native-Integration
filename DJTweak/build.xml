@@ -19,9 +19,9 @@
 	        <include name="**/*.*"/>
 				</externalset-->
 	  	</icons>
-      <!--vmarguments>
-        <pattern vendor="Sun .*" version="1\.[^01234].*" arguments="-DSomeProperty=SomeValue"/>
-      </vmarguments-->
+      <!--vmargs>
+        <pattern vendor="Sun .*" version="1\.[^01234].*" args="-DSomeProperty=SomeValue"/>
+      </vmargs-->
 	  </dj>
 	</target>
 

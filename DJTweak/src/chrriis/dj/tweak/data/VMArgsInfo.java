@@ -3,16 +3,16 @@ package chrriis.dj.tweak.data;
 /**
  * @author Christopher Deckers
  */
-public class VMArgumentsInfo {
+public class VMArgsInfo {
 
   protected String vendor;
   protected String version;
-  protected String arguments;
+  protected String args;
   
-  public VMArgumentsInfo(String vendor, String version, String arguments) {
+  public VMArgsInfo(String vendor, String version, String args) {
     this.vendor = vendor;
     this.version = version;
-    this.arguments = arguments;
+    this.args = args;
   }
   
   public String getVendor() {
@@ -31,12 +31,12 @@ public class VMArgumentsInfo {
     this.version = version;
   }
   
-  public String getArguments() {
-    return arguments;
+  public String getArgs() {
+    return args;
   }
   
-  public void setArguments(String arguments) {
-    this.arguments = arguments;
+  public void setArgs(String args) {
+    this.args = args;
   }
   
 }

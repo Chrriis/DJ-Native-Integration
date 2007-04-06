@@ -13,12 +13,12 @@ import java.util.List;
 import org.apache.tools.ant.Project;
 
 import chrriis.dj.tweak.data.JarFileInfo;
-import chrriis.dj.tweak.data.VMArgumentsInfo;
+import chrriis.dj.tweak.data.VMArgsInfo;
 
 /**
  * @author Christopher Deckers
  */
-public class VMArguments {
+public class VMArgs {
 
   public static class Pattern {
 
@@ -34,10 +34,10 @@ public class VMArguments {
       this.vendor = vendor;
     }
     
-    protected String arguments;
+    protected String args;
     
-    public void setArguments(String arguments) {
-      this.arguments = arguments;
+    public void setArgs(String args) {
+      this.args = args;
     }
     
   }
@@ -48,14 +48,14 @@ public class VMArguments {
       patternList.add(pattern);
   }
 
-  public VMArgumentsInfo[] getVMArgumentsInfo(Project project, JarFileInfo jarfileInfo) {
-    VMArgumentsInfo[] vmArgumentsInfos = new VMArgumentsInfo[patternList.size()];
-    for(int i=0; i<vmArgumentsInfos.length; i++) {
+  public VMArgsInfo[] getVMArgsInfo(Project project, JarFileInfo jarfileInfo) {
+    VMArgsInfo[] vmArgsInfos = new VMArgsInfo[patternList.size()];
+    for(int i=0; i<vmArgsInfos.length; i++) {
       Pattern pattern = patternList.get(i);
-      System.out.println("Adding VM arguments: vendor=\"" + pattern.vendor + "\", version=\"" + pattern.version + "\", arguments=\"" + pattern.arguments + '"');
-      vmArgumentsInfos[i] = new VMArgumentsInfo(pattern.vendor, pattern.version, pattern.arguments);
+      System.out.println("Adding VM arguments: vendor=\"" + pattern.vendor + "\", version=\"" + pattern.version + "\", args=\"" + pattern.args + '"');
+      vmArgsInfos[i] = new VMArgsInfo(pattern.vendor, pattern.version, pattern.args);
     }
-    return vmArgumentsInfos;
+    return vmArgsInfos;
   }
   
 }

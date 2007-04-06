@@ -32,15 +32,15 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import chrriis.dj.tweak.data.JarFileInfo;
-import chrriis.dj.tweak.data.VMArgumentsInfo;
+import chrriis.dj.tweak.data.VMArgsInfo;
 import chrriis.dj.tweak.ui.TableSorter;
 
 /**
  * @author Christopher Deckers
  */
-public class VMArgumentsPanel extends JPanel {
+public class VMArgsPanel extends JPanel {
 
-  protected List<VMArgumentsInfo> vmArgumentsInfoList;
+  protected List<VMArgsInfo> vmArgsInfoList;
   protected JTable table;
   protected TableModel tableModel;
   protected TableSorter tableSorter;
@@ -50,7 +50,7 @@ public class VMArgumentsPanel extends JPanel {
 
   protected JarFileInfo jarFileInfo;
   
-  public VMArgumentsPanel() {
+  public VMArgsPanel() {
     super(new BorderLayout(0, 0));
     JPanel centerPanel = new JPanel(new BorderLayout(0, 0));
     centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -59,15 +59,15 @@ public class VMArgumentsPanel extends JPanel {
         return 3;
       }
       public int getRowCount() {
-        return vmArgumentsInfoList.size();
+        return vmArgsInfoList.size();
       }
       public Object getValueAt(int rowIndex, int columnIndex) {
-        VMArgumentsInfo vmArgumentsInfo = vmArgumentsInfoList.get(rowIndex);
+        VMArgsInfo vmArgsInfo = vmArgsInfoList.get(rowIndex);
         switch (columnIndex) {
-          case -1: return vmArgumentsInfo;
-          case 0: return vmArgumentsInfo.getVendor();
-          case 1: return vmArgumentsInfo.getVersion();
-          case 2: return vmArgumentsInfo.getArguments();
+          case -1: return vmArgsInfo;
+          case 0: return vmArgsInfo.getVendor();
+          case 1: return vmArgsInfo.getVersion();
+          case 2: return vmArgsInfo.getArgs();
         }
         return null;
       }
@@ -86,18 +86,18 @@ public class VMArgumentsPanel extends JPanel {
       }
       @Override
       public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        VMArgumentsInfo vmArgumentsInfo = (VMArgumentsInfo)getValueAt(rowIndex, -1);
+        VMArgsInfo vmArgsInfo = (VMArgsInfo)getValueAt(rowIndex, -1);
         String newValue = aValue.toString().trim();
         String oldValue;
         switch(columnIndex) {
           case 0:
-            oldValue = vmArgumentsInfo.getVendor();
+            oldValue = vmArgsInfo.getVendor();
             break;
           case 1:
-            oldValue = vmArgumentsInfo.getVersion();
+            oldValue = vmArgsInfo.getVersion();
             break;
           case 2:
-            oldValue = vmArgumentsInfo.getArguments();
+            oldValue = vmArgsInfo.getArgs();
             break;
           default:
             return;
@@ -106,17 +106,17 @@ public class VMArgumentsPanel extends JPanel {
         if(oldValue.equals(newValue)) {
           return;
         }
-        VMArgumentsPanel.this.firePropertyChange("jarModified", false, true);
+        VMArgsPanel.this.firePropertyChange("jarModified", false, true);
         storeState();
         switch(columnIndex) {
           case 0:
-            vmArgumentsInfo.setVendor(newValue);
+            vmArgsInfo.setVendor(newValue);
             break;
           case 1:
-            vmArgumentsInfo.setVersion(newValue);
+            vmArgsInfo.setVersion(newValue);
             break;
           case 2:
-            vmArgumentsInfo.setArguments(newValue);
+            vmArgsInfo.setArgs(newValue);
             break;
         }
         adjustTable();
@@ -146,13 +146,13 @@ public class VMArgumentsPanel extends JPanel {
     addButton = new JButton("Add");
     addButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        VMArgumentsPanel.this.firePropertyChange("jarModified", false, true);
-        VMArgumentsInfo vmArgumentsInfo = new VMArgumentsInfo("", "", "");
-        vmArgumentsInfoList.add(vmArgumentsInfo);
+        VMArgsPanel.this.firePropertyChange("jarModified", false, true);
+        VMArgsInfo vmArgsInfo = new VMArgsInfo("", "", "");
+        vmArgsInfoList.add(vmArgsInfo);
         adjustTable();
         int rowCount = table.getRowCount();
         for(int i=0; i<rowCount; i++) {
-          if(table.getValueAt(i, -1) == vmArgumentsInfo) {
+          if(table.getValueAt(i, -1) == vmArgsInfo) {
             table.getSelectionModel().setSelectionInterval(i, i);
             table.editCellAt(i, 0);
             Component component = table.getEditorComponent();
@@ -184,14 +184,14 @@ public class VMArgumentsPanel extends JPanel {
     removeButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         table.removeEditor();
-        VMArgumentsPanel.this.firePropertyChange("jarModified", false, true);
+        VMArgsPanel.this.firePropertyChange("jarModified", false, true);
         storeState();
-        List<VMArgumentsInfo> removableAttributeInfoList = new ArrayList<VMArgumentsInfo>();
+        List<VMArgsInfo> removableAttributeInfoList = new ArrayList<VMArgsInfo>();
         for(int i: table.getSelectedRows()) {
-          removableAttributeInfoList.add((VMArgumentsInfo)table.getValueAt(i, -1));
+          removableAttributeInfoList.add((VMArgsInfo)table.getValueAt(i, -1));
         }
-        for(VMArgumentsInfo vmArgumentsInfo: removableAttributeInfoList) {
-          vmArgumentsInfoList.remove(vmArgumentsInfo);
+        for(VMArgsInfo vmArgsInfo: removableAttributeInfoList) {
+          vmArgsInfoList.remove(vmArgsInfo);
         }
         adjustTable();
         restoreState();
@@ -217,15 +217,15 @@ public class VMArgumentsPanel extends JPanel {
   public void loadContent(final JarFileInfo jarFileInfo) {
     this.jarFileInfo = jarFileInfo;
     if(jarFileInfo == null) {
-      vmArgumentsInfoList = Collections.EMPTY_LIST;
+      vmArgsInfoList = Collections.EMPTY_LIST;
     } else {
-      vmArgumentsInfoList = new ArrayList<VMArgumentsInfo>(Arrays.asList(jarFileInfo.getVMArgumentsInfos()));
-//      Comparator<VMArgumentsInfo> attributeInfoComparator = new Comparator<VMArgumentsInfo>() {
-//        public int compare(VMArgumentsInfo o1, VMArgumentsInfo o2) {
+      vmArgsInfoList = new ArrayList<VMArgsInfo>(Arrays.asList(jarFileInfo.getVMArgsInfos()));
+//      Comparator<VMArgsInfo> attributeInfoComparator = new Comparator<VMArgsInfo>() {
+//        public int compare(VMArgsInfo o1, VMArgsInfo o2) {
 //          return o1.getVendor().toLowerCase(Locale.ENGLISH).compareTo(o2.getVendor().toLowerCase(Locale.ENGLISH));
 //        }
 //      };
-//      Collections.sort(vmArgumentsInfoList, attributeInfoComparator);
+//      Collections.sort(vmArgsInfoList, attributeInfoComparator);
     }
     tableSorter.fireTableDataChanged();
     for(int i=tableSorter.getColumnCount()-1; i>=0; i--) {
@@ -238,26 +238,26 @@ public class VMArgumentsPanel extends JPanel {
     removeButton.setEnabled(false);
   }
 
-  protected List<VMArgumentsInfo> selectedVMArgumentsInfoList;
-  protected VMArgumentsInfo focusedVMArgumentsInfo;
+  protected List<VMArgsInfo> selectedVMArgsInfoList;
+  protected VMArgsInfo focusedVMArgsInfo;
   protected int focusedColumn;
   
   protected void storeState() {
     int leadRow = table.getSelectionModel().getAnchorSelectionIndex();
     int leadColumn = table.getColumnModel().getSelectionModel().getAnchorSelectionIndex();
     if(leadRow != -1 && leadColumn != -1) {
-      focusedVMArgumentsInfo = (VMArgumentsInfo)table.getValueAt(leadRow, -1);
+      focusedVMArgsInfo = (VMArgsInfo)table.getValueAt(leadRow, -1);
       focusedColumn = leadColumn;
     }
-    selectedVMArgumentsInfoList = new ArrayList<VMArgumentsInfo>();
+    selectedVMArgsInfoList = new ArrayList<VMArgsInfo>();
     for(int i: table.getSelectedRows()) {
       table.getValueAt(i, -1);
-      selectedVMArgumentsInfoList.add((VMArgumentsInfo)table.getValueAt(i, -1));
+      selectedVMArgsInfoList.add((VMArgsInfo)table.getValueAt(i, -1));
     }
   }
   
   protected void restoreState() {
-    if(selectedVMArgumentsInfoList == null) {
+    if(selectedVMArgsInfoList == null) {
       return;
     }
     table.clearSelection();
@@ -265,11 +265,11 @@ public class VMArgumentsPanel extends JPanel {
     ListSelectionModel selectionModel = table.getSelectionModel();
     ListSelectionModel columnSelectionModel = table.getColumnModel().getSelectionModel();
     for(int i=0; i<rowCount; i++) {
-      VMArgumentsInfo vmArgumentsInfo = (VMArgumentsInfo)table.getValueAt(i, -1);
-      if(selectedVMArgumentsInfoList.contains(vmArgumentsInfo)) {
+      VMArgsInfo vmArgsInfo = (VMArgsInfo)table.getValueAt(i, -1);
+      if(selectedVMArgsInfoList.contains(vmArgsInfo)) {
         selectionModel.addSelectionInterval(i, i);
       }
-      if(vmArgumentsInfo == focusedVMArgumentsInfo) {
+      if(vmArgsInfo == focusedVMArgsInfo) {
         selectionModel.setAnchorSelectionIndex(i);
         selectionModel.setLeadSelectionIndex(i);
         columnSelectionModel.setAnchorSelectionIndex(focusedColumn);
@@ -277,8 +277,8 @@ public class VMArgumentsPanel extends JPanel {
         editButton.setEnabled(true);
       }
     }
-    selectedVMArgumentsInfoList = null;
-    focusedVMArgumentsInfo = null;
+    selectedVMArgsInfoList = null;
+    focusedVMArgsInfo = null;
   }
   
   protected void adjustTable() {
@@ -288,8 +288,8 @@ public class VMArgumentsPanel extends JPanel {
     }
   }
   
-  public VMArgumentsInfo[] getVMArgumentsInfos() {
-    return vmArgumentsInfoList.toArray(new VMArgumentsInfo[0]);
+  public VMArgsInfo[] getVMArgsInfos() {
+    return vmArgsInfoList.toArray(new VMArgsInfo[0]);
   }
   
 }

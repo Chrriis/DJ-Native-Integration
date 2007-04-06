@@ -14,7 +14,7 @@ import org.apache.tools.ant.Task;
 
 import chrriis.dj.tweak.data.IconInfo;
 import chrriis.dj.tweak.data.JarFileInfo;
-import chrriis.dj.tweak.data.VMArgumentsInfo;
+import chrriis.dj.tweak.data.VMArgsInfo;
 
 /**
  * @author Christopher Deckers
@@ -38,10 +38,10 @@ public class DJTask extends Task {
     this.icons = icons;
   }
   
-  protected VMArguments vmArguments;
+  protected VMArgs vmArgs;
 
-  public void addVmarguments(VMArguments vmArguments) {
-    this.vmArguments = vmArguments;
+  public void addVmargs(VMArgs vmArgs) {
+    this.vmArgs = vmArgs;
   }
   
   public void execute() throws BuildException {
@@ -67,17 +67,17 @@ public class DJTask extends Task {
         throw new BuildException(e);
       }
     }
-    VMArgumentsInfo[] vmArgumentsInfos = jarfileInfo.getVMArgumentsInfos();
-    if(vmArguments != null) {
+    VMArgsInfo[] vmArgsInfos = jarfileInfo.getVMArgsInfos();
+    if(vmArgs != null) {
       try {
-        vmArgumentsInfos = vmArguments.getVMArgumentsInfo(getProject(), jarfileInfo);
+        vmArgsInfos = vmArgs.getVMArgsInfo(getProject(), jarfileInfo);
       } catch(Exception e) {
         throw new BuildException(e);
       }
     }
     String toFilePath = toFile.getPath();
     System.out.println("Saving jar: " + toFilePath);
-    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, vmArgumentsInfos, toFile)) {
+    if(!jarfileInfo.saveInfos(jarfileInfo.getAttributeInfos(), iconInfos, vmArgsInfos, toFile)) {
       throw new BuildException("The information could not be written to the file \"" + toFilePath + "\". The path may be invalid, or you may not have the necessary permissions.");
     }
   }

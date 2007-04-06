@@ -43,6 +43,14 @@ public class DJJarExeInstallerListener extends SimpleInstallerListener {
           VariableSubstitutor substitutor = new VariableSubstitutor(getInstalldata().getVariables());
           String installPath = substitutor.substitute("$INSTALL_PATH", null);
           rh.setValue(keyPath, key, stringData.substring(0, index1 + " -jar ".length()) + "\"" + new File(installPath).getAbsolutePath() + "\\DJ JarExe\\DJJarExe.jar\"" + stringData.substring(index2));
+          // Open in Shell command
+          String oisKeyPath = "jarfile\\shell\\openinshell";
+          String oiscKeyPath = "jarfile\\shell\\openinshell\\command";
+          if(!rh.keyExist(oiscKeyPath)) {
+            rh.createKey(oiscKeyPath);
+          }
+          rh.setValue(oiscKeyPath, key, stringData.substring(0, index1) + " -Ddj.jarexe.console=true -jar \"" + new File(installPath).getAbsolutePath() + "\\DJ JarExe\\DJJarExe.jar\"" + stringData.substring(index2));
+          rh.setValue(oisKeyPath, "", "Open in Shell");
         }
       }
     }
