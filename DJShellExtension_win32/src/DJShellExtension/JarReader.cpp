@@ -67,12 +67,12 @@ bool JarReader::readFileFromJar(const char *filename, unsigned int& len, unsigne
         return false;
     }
     size_buf = file_info.uncompressed_size;
-    buf = (unsigned char*)malloc(size_buf);
+    buf = (unsigned char*)malloc(size_buf + 1);
     if (buf==NULL) {
         // printf("Error allocating memory\n");
         return false;
     }
-
+    buf[size_buf] = '\0';
     int bytesRead ;
     do {
         if ((bytesRead=unzReadCurrentFile(jarHandle,(char*)buf+offset,size_buf)) < 0) {
