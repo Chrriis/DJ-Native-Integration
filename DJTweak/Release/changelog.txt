@@ -7,6 +7,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 * Version 1.002 (xxxxxxxxxxxxxx):
 
+- Saving a JAR that did not have a manifest was not adding it properly.
 - Package names are changed, which affect the ant task.
 - VM args can be read/added from/to the JAR file.
 - Drag and drop is fully implemented, to accept JARs and images.

@@ -195,6 +195,7 @@ public class JarFileInfo {
     boolean isSuccess = false;
     if(manifest == null) {
       manifest = new Manifest();
+      manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
     }
     try {
       Attributes attributes = manifest.getMainAttributes();
