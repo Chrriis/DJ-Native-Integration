@@ -257,7 +257,7 @@ public class JarFileInfo {
         ZipEntry entry = entries.nextElement();
         String name = entry.getName();
         entry.setCompressedSize(-1);
-        if(!name.toLowerCase(Locale.ENGLISH).equals("meta-inf/manifest.mf") && (!name.startsWith(JAR_ICONS_PATH) || oldExternalIconPathList.contains(name))) {
+        if(!name.equals(JarFile.MANIFEST_NAME) && (!name.startsWith(JAR_ICONS_PATH) || oldExternalIconPathList.contains(name))) {
           out.putNextEntry(entry);
           InputStream in = jarFile.getInputStream(entry);
           byte[] bytes = new byte[1024];

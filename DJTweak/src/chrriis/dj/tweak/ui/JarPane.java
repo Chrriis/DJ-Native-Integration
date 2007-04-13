@@ -47,6 +47,7 @@ public class JarPane extends JPanel {
   protected AttributesPanel attributesPanel;
   protected VMArgsPanel vmArgsPanel;
   protected JButton saveButton;
+  protected JLabel signatureLabel;
   
   public JarPane(final DJPane djPane) {
     super(new BorderLayout(0, 0));
@@ -125,6 +126,9 @@ public class JarPane extends JPanel {
     gridBag.setConstraints(saveButton, cons);
     savePanel.add(saveButton);
     southPanel.add(savePanel, BorderLayout.CENTER);
+    signatureLabel = new JLabel("The file appears to be signed and cannot be edited.");
+    signatureLabel.setHorizontalAlignment(JLabel.CENTER);
+    southPanel.add(signatureLabel, BorderLayout.NORTH);
     PropertyChangeListener jarModificationPropertyChangeListener = new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent e) {
         if("jarModified".equals(e.getPropertyName())) {
@@ -178,6 +182,7 @@ public class JarPane extends JPanel {
     attributesPanel.loadContent(jarFileInfo);
     vmArgsPanel.loadContent(jarFileInfo);
     saveButton.setEnabled(false);
+    signatureLabel.setVisible(isEnabled && jarFileInfo.isSigned());
   }
   
 }
