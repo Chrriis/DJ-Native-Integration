@@ -33,13 +33,13 @@ public class UIUtil {
   
   public static JFileChooser getJarFileChooser() {
     FILE_CHOOSER.setMultiSelectionEnabled(false);
-    FILE_CHOOSER.removeChoosableFileFilter(imageFileFilter);
-    FILE_CHOOSER.setFileFilter(jarFileFilter);
+    FILE_CHOOSER.removeChoosableFileFilter(IMAGE_FILE_FILTER);
+    FILE_CHOOSER.setFileFilter(JAR_FILE_FILTER);
     return FILE_CHOOSER;
   }
   
 
-  protected static FileFilter jarFileFilter = new FileFilter() {
+  protected static final FileFilter JAR_FILE_FILTER = new FileFilter() {
     @Override
     public boolean accept(File f) {
       return f.isDirectory() || f.getName().toLowerCase(Locale.ENGLISH).endsWith(".jar");
@@ -50,7 +50,7 @@ public class UIUtil {
     }
   };
 
-  protected static FileFilter imageFileFilter = new FileFilter() {
+  protected static final FileFilter IMAGE_FILE_FILTER = new FileFilter() {
     @Override
     public boolean accept(File f) {
       String lcName = f.getName().toLowerCase(Locale.ENGLISH);
@@ -64,8 +64,8 @@ public class UIUtil {
 
   public static JFileChooser getImagesFileChooser() {
     FILE_CHOOSER.setMultiSelectionEnabled(true);
-    FILE_CHOOSER.removeChoosableFileFilter(jarFileFilter);
-    FILE_CHOOSER.setFileFilter(imageFileFilter);
+    FILE_CHOOSER.removeChoosableFileFilter(JAR_FILE_FILTER);
+    FILE_CHOOSER.setFileFilter(IMAGE_FILE_FILTER);
     return FILE_CHOOSER;
   }
   
