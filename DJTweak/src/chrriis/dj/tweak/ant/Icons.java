@@ -79,7 +79,7 @@ public class Icons {
         String filePath = file.getPath();
         System.out.println("Adding external image: " + filePath);
         try {
-          URL fileURL = file.toURL();
+          URL fileURL = file.toURI().toURL();
           Dimension size = DataUtil.getImageSize(fileURL);
           for(IconInfo iconInfo: iconInfoList) {
             if(iconInfo.getWidth() == size.width && iconInfo.getHeight() == size.height) {

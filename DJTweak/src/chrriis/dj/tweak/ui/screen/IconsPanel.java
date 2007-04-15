@@ -269,7 +269,7 @@ public class IconsPanel extends JPanel {
     boolean isModified = false;
     for(File file: files) {
       try {
-        URL fileURL = file.toURL();
+        URL fileURL = file.toURI().toURL();
         ImageIcon imageIcon = new ImageIcon(fileURL);
         int iconWidth = imageIcon.getIconWidth();
         int iconHeight = imageIcon.getIconHeight();

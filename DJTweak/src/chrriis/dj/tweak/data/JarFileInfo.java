@@ -64,7 +64,7 @@ public class JarFileInfo {
     try {
       JarFile jarFile = new JarFile(sourceFile);
       List<String> imagePathList = new ArrayList<String>();
-      fileURL = sourceFile.toURL();
+      fileURL = sourceFile.toURI().toURL();
       Enumeration<? extends ZipEntry> entries = jarFile.entries();
       while(entries.hasMoreElements()) {
         String name = entries.nextElement().getName();
