@@ -16,6 +16,7 @@ Licence terms: GPL v2 (see licence.txt)
 - Image quality of the thumbnails is greatly enhanced.
 - When adding a non-square icon, the user is warned.
 - When the icon is going to replace another one, the user is warned.
+- Ant task name is changed.
 - When saving fails, the user is told.
 - Slight changes to the about screen.
 

@@ -26,7 +26,7 @@ Alternatively, you can use DJ Tweak's Ant task. Here is an example:
 <project name="Sample build script" default="configureJar">
   <target name="configureJar" description="Configure the JAR file icons">
     <taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="DJTweak.jar"/>
-    <dj file="MyJARFile.jar" tofile="MyJARFileWithIcons.jar">
+    <djtweak file="MyJARFile.jar" tofile="MyJARFileWithIcons.jar">
       <icons>
         <internalset>
           <include name="some/package/in/the/jar/file/**/*.png"/>
@@ -39,7 +39,7 @@ Alternatively, you can use DJ Tweak's Ant task. Here is an example:
         <pattern vendor="Sun .*" version="1\.[^01234].*"
             args="-DSomeProperty=SomeValue"/>
       </vmargs>
-    </dj>
+    </djtweak>
   </target>
 </project>
 
