@@ -1,0 +1,44 @@
+<project name="Build script" default="createJar">
+
+	<target name="createJar" description="Create the Jar file">
+    <delete dir="Release/lib"/>
+		<delete file="Release/DJWebApplicationPacker.jar"/>
+		<jar duplicate="preserve" destfile="Release/DJWebApplicationPacker.jar">
+			<fileset dir="bin"/>
+			<manifest>
+				<attribute name="Main-Class" value="chrriis.dj.wa.packer.WAPackerFrame"/>
+				<attribute name="Class-Path" value="lib/izpack/lib/standalone-compiler-reduced.jar lib/izpack/lib/izevent.jar"/>
+			</manifest>
+		</jar>
+    <!--mkdir dir="Release/lib/izpack/lib"/-->
+    <copy file="lib/izpack/lib/izevent.jar" todir="Release/lib/izpack/lib"/>
+    <copy file="lib/izpack/bin/customActions/RegistryUninstallerListener.jar" todir="Release/lib/izpack/bin/customActions"/>
+    <jar destfile="Release/lib/izpack/lib/standalone-compiler-reduced.jar">
+      <zipfileset src="lib/izpack/lib/standalone-compiler.jar">
+        <exclude name="org/apache/tools/ant/**/*.*"/>
+        <exclude name="lib/ant.jar"/>
+        <exclude name="lib/kunststoff.jar"/>
+        <exclude name="lib/liquidlnf.jar"/>
+        <exclude name="lib/looks.jar"/>
+        <exclude name="lib/metouia.jar"/>
+        <exclude name="lib/uninstaller-ext.jar"/>
+        <exclude name="com/izforge/izpack/ant/**.*"/>
+        <exclude name="bin/customActions/**.*"/>
+        <exclude name="bin/panels/**.*"/>
+        <exclude name="images/**.*"/>
+      </zipfileset>
+      <zipfileset src="lib/izpack/lib/standalone-compiler.jar">
+        <include name="bin/panels/HTMLInfoPanel.jar"/>
+        <include name="bin/panels/InfoPanel.jar"/>
+        <include name="bin/panels/HTMLLicencePanel.jar"/>
+        <include name="bin/panels/LicencePanel.jar"/>
+        <include name="bin/panels/PacksPanel.jar"/>
+        <include name="bin/panels/TargetPanel.jar"/>
+        <include name="bin/panels/InstallPanel.jar"/>
+        <include name="bin/panels/ShortcutPanel.jar"/>
+        <include name="bin/panels/SimpleFinishPanel.jar"/>
+      </zipfileset>
+    </jar>
+	</target>
+
+</project>
