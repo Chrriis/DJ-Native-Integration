@@ -10,7 +10,7 @@
 			</manifest>
 		</jar>
 	  <taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="Release/DJLib.jar"/>
-	  <dj file="Release/DJLib.jar" tofile="Release/DJTweak.jar">
+	  <djtweak file="Release/DJLib.jar" tofile="Release/DJTweak.jar">
 	  	<icons>
 		  	<internalset>
 		  		<include name="chrriis/dj/tweak/ui/resource/DJTweak??x??.png"/>
@@ -22,7 +22,7 @@
       <!--vmargs>
         <pattern vendor="Sun .*" version="1\.[^01234].*" args="-DSomeProperty=SomeValue"/>
       </vmargs-->
-	  </dj>
+	  </djtweak>
 	</target>
 
 </project>

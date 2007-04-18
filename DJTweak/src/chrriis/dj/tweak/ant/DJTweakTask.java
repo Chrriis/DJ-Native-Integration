@@ -19,7 +19,7 @@ import chrriis.dj.tweak.data.VMArgsInfo;
 /**
  * @author Christopher Deckers
  */
-public class DJTask extends Task {
+public class DJTweakTask extends Task {
 
   protected File fromFile;
   protected File toFile;
