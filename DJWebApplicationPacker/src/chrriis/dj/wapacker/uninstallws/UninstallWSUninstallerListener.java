@@ -1,10 +1,17 @@
-package chrriis.dj.wa.packer.uninstallws;
+/*
+ * Christopher Deckers (chrriis@nextencia.net)
+ * http://www.nextencia.net
+ * 
+ * See the file "readme.txt" for information on usage and redistribution of
+ * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ */
+package chrriis.dj.wapacker.uninstallws;
 
 import java.io.File;
 import java.util.List;
 import java.util.jar.JarFile;
 
-import chrriis.dj.wa.wslink.WSLinkGenerator;
+import chrriis.dj.wapacker.wslink.WSLinkGenerator;
 
 import com.izforge.izpack.event.SimpleUninstallerListener;
 import com.izforge.izpack.util.AbstractUIProgressHandler;

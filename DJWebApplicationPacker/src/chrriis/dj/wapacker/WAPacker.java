@@ -1,4 +1,11 @@
-package chrriis.dj.wa.packer;
+/*
+ * Christopher Deckers (chrriis@nextencia.net)
+ * http://www.nextencia.net
+ * 
+ * See the file "readme.txt" for information on usage and redistribution of
+ * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ */
+package chrriis.dj.wapacker;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,9 +17,9 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import chrriis.dj.wa.packer.installws.InstallWSInstallerListener;
-import chrriis.dj.wa.packer.uninstallws.UninstallWSUninstallerListener;
-import chrriis.dj.wa.wslink.WSLinkGenerator;
+import chrriis.dj.wapacker.installws.InstallWSInstallerListener;
+import chrriis.dj.wapacker.uninstallws.UninstallWSUninstallerListener;
+import chrriis.dj.wapacker.wslink.WSLinkGenerator;
 
 import com.izforge.izpack.compiler.CompilerConfig;
 
@@ -21,8 +28,8 @@ import com.izforge.izpack.compiler.CompilerConfig;
  */
 public class WAPacker {
 
-  protected static final String IZPACK_HOME = "lib/izpack";
-  protected static final String CUSTOM_ACTIONS_PATH = IZPACK_HOME + "/bin/customActions";
+  protected static final File IZPACK_HOME_DIR = new File(Util.getApplicationDirectory(), "lib/izpack");
+  protected static final File CUSTOM_ACTIONS_DIR = new File(IZPACK_HOME_DIR, "/bin/customActions");
 
   public void pack(WAPackerConfiguration waPackerConfiguration) {
     waPackerConfiguration.getOutputJarFile().delete();
@@ -67,11 +74,16 @@ public class WAPacker {
       if(!generateShortcutSpecXMLFile(waPackerConfiguration, wsLinkGenerator, shortcutSpecXMLFile, wsLinkJarFile)) {
         throw new IllegalStateException("Could not generate the Shortcut Spec XML file content!");
       }
-      if(!generateInstallerXMLFileContent(waPackerConfiguration, wsLinkGenerator, installerXMLFile, wsLinkJarFile, customLangPackXMLFile, shortcutSpecXMLFile)) {
+      boolean isSuccess = false;
+      try {
+        isSuccess = generateInstallerXMLFileContent(waPackerConfiguration, wsLinkGenerator, installerXMLFile, wsLinkJarFile, customLangPackXMLFile, shortcutSpecXMLFile);
+      } catch(Exception e) {
+      }
+      if(!isSuccess) {
         throw new IllegalStateException("Could not generate the installer XML file content!");
       }
-      CompilerConfig c = new CompilerConfig(installerXMLFile.getAbsolutePath(), ".", CompilerConfig.STANDARD, waPackerConfiguration.getOutputJarFile().getAbsolutePath());
-      CompilerConfig.setIzpackHome(IZPACK_HOME);
+      CompilerConfig c = new CompilerConfig(installerXMLFile.getCanonicalPath(), ".", CompilerConfig.STANDARD, waPackerConfiguration.getOutputJarFile().getCanonicalPath());
+      CompilerConfig.setIzpackHome(IZPACK_HOME_DIR.getCanonicalPath());
       c.executeCompiler();
     } catch(RuntimeException e) {
       String message = e.getMessage();
@@ -105,7 +117,7 @@ public class WAPacker {
   }
   
   protected File extractInstallWSInstallerListenerJarFile() {
-    File jarFile = new File(CUSTOM_ACTIONS_PATH + "/InstallWSInstallerListener.jar");
+    File jarFile = new File(CUSTOM_ACTIONS_DIR, "/InstallWSInstallerListener.jar");
     jarFile.getParentFile().mkdirs();
     try {
       ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(jarFile)));
@@ -131,7 +143,7 @@ public class WAPacker {
   }
 
   protected File extractUninstallWSUninstallerListenerJarFile() {
-    File jarFile = new File(CUSTOM_ACTIONS_PATH + "/UninstallWSUninstallerListener.jar");
+    File jarFile = new File(CUSTOM_ACTIONS_DIR, "/UninstallWSUninstallerListener.jar");
     jarFile.getParentFile().mkdirs();
     try {
       ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(jarFile)));
@@ -249,7 +261,7 @@ public class WAPacker {
     return false;
   }
   
-  protected static boolean generateInstallerXMLFileContent(WAPackerConfiguration waPackerConfiguration, WSLinkGenerator wsLinkGenerator, File xmlFile, File wsLinkJarFile, File customLangPackXMLFile, File shortcutSpecXMLFile) {
+  protected static boolean generateInstallerXMLFileContent(WAPackerConfiguration waPackerConfiguration, WSLinkGenerator wsLinkGenerator, File xmlFile, File wsLinkJarFile, File customLangPackXMLFile, File shortcutSpecXMLFile) throws Exception {
     StringBuilder sb = new StringBuilder();
     sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     sb.append("<installation version=\"1.0\">");
@@ -289,22 +301,22 @@ public class WAPacker {
     File readmeFile = waPackerConfiguration.getReadmeFile();
     if(readmeFile != null && readmeFile.exists()) {
       if(isHTML(readmeFile)) {
-        sb.append("<res id=\"HTMLInfoPanel.info\" src=\"").append(escapeXML(readmeFile.getAbsolutePath())).append("\"/>");
+        sb.append("<res id=\"HTMLInfoPanel.info\" src=\"").append(escapeXML(readmeFile.getCanonicalPath())).append("\"/>");
       } else {
-        sb.append("<res id=\"InfoPanel.info\" src=\"").append(escapeXML(readmeFile.getAbsolutePath())).append("\"/>");
+        sb.append("<res id=\"InfoPanel.info\" src=\"").append(escapeXML(readmeFile.getCanonicalPath())).append("\"/>");
       }
     }
     File licenseFile = waPackerConfiguration.getLicenseFile();
     if(licenseFile != null && licenseFile.exists()) {
       if(isHTML(licenseFile)) {
-        sb.append("<res id=\"HTMLLicencePanel.licence\" src=\"").append(escapeXML(licenseFile.getAbsolutePath())).append("\"/>");
+        sb.append("<res id=\"HTMLLicencePanel.licence\" src=\"").append(escapeXML(licenseFile.getCanonicalPath())).append("\"/>");
       } else {
-        sb.append("<res id=\"LicencePanel.licence\" src=\"").append(escapeXML(licenseFile.getAbsolutePath())).append("\"/>");
+        sb.append("<res id=\"LicencePanel.licence\" src=\"").append(escapeXML(licenseFile.getCanonicalPath())).append("\"/>");
       }
     }
-    sb.append("<res id=\"shortcutSpec.xml\" src=\"").append(escapeXML(shortcutSpecXMLFile.getAbsolutePath())).append("\"/>");
-    sb.append("<res id=\"Unix_shortcutSpec.xml\" src=\"").append(escapeXML(shortcutSpecXMLFile.getAbsolutePath())).append("\"/>");
-    sb.append("<res id=\"CustomLangpack.xml_eng\" src=\"").append(escapeXML(customLangPackXMLFile.getAbsolutePath())).append("\"/>");
+    sb.append("<res id=\"shortcutSpec.xml\" src=\"").append(escapeXML(shortcutSpecXMLFile.getCanonicalPath())).append("\"/>");
+    sb.append("<res id=\"Unix_shortcutSpec.xml\" src=\"").append(escapeXML(shortcutSpecXMLFile.getCanonicalPath())).append("\"/>");
+    sb.append("<res id=\"CustomLangpack.xml_eng\" src=\"").append(escapeXML(customLangPackXMLFile.getCanonicalPath())).append("\"/>");
 //    sb.append("<res id=\"customicons.xml\" src=\"resources/CustomIcons.xml\"/>");
 //    sb.append("<res id=\"DJFrameIcon.png\" src=\"resources/DJInstall32x32.png\"/>");
     sb.append("</resources>");
@@ -330,8 +342,8 @@ public class WAPacker {
     sb.append("<panel classname=\"ShortcutPanel\"/>");
     sb.append("<panel classname=\"SimpleFinishPanel\"/>");
     sb.append("</panels>");
-    sb.append("<jar src=\"").append(escapeXML(IZPACK_HOME)).append("/bin/customActions/RegistryUninstallerListener.jar\" stage=\"install\"/>");
-    sb.append("<jar src=\"").append(escapeXML(IZPACK_HOME)).append("/lib/izevent.jar\" stage=\"uninstall\"/>");
+    sb.append("<jar src=\"").append(escapeXML(new File(IZPACK_HOME_DIR, "bin/customActions/RegistryUninstallerListener.jar").getCanonicalPath())).append("\" stage=\"install\"/>");
+    sb.append("<jar src=\"").append(escapeXML(new File(IZPACK_HOME_DIR, "lib/izevent.jar").getCanonicalPath())).append("\" stage=\"uninstall\"/>");
     sb.append("<listeners>");
     sb.append("<listener uninstaller=\"UninstallWSUninstallerListener\">");
 //    sb.append("<os family=\"windows\"/>");
@@ -346,15 +358,15 @@ public class WAPacker {
     sb.append("<packs>");
     sb.append("<pack name=\"").append(escapeXML(appName)).append(" Files\" required=\"yes\">");
     sb.append("<description>The core files of this Web Application.</description>");
-    sb.append("<file src=\"").append(escapeXML(wsLinkJarFile.getAbsolutePath())).append("\" targetdir=\"$INSTALL_PATH\"/>");
+    sb.append("<file src=\"").append(escapeXML(wsLinkJarFile.getCanonicalPath())).append("\" targetdir=\"$INSTALL_PATH\"/>");
     if(readmeFile != null && readmeFile.exists()) {
-      sb.append("<file src=\"").append(escapeXML(readmeFile.getAbsolutePath())).append("\" targetdir=\"$INSTALL_PATH\"/>");
+      sb.append("<file src=\"").append(escapeXML(readmeFile.getCanonicalPath())).append("\" targetdir=\"$INSTALL_PATH\"/>");
     }
     if(licenseFile != null && licenseFile.exists()) {
-      sb.append("<file src=\"").append(escapeXML(licenseFile.getAbsolutePath())).append("\" targetdir=\"$INSTALL_PATH\"/>");
+      sb.append("<file src=\"").append(escapeXML(licenseFile.getCanonicalPath())).append("\" targetdir=\"$INSTALL_PATH\"/>");
     }
     if(applicationArchiveFile != null) {
-      sb.append("<file src=\"").append(escapeXML(applicationArchiveFile.getAbsolutePath())).append("\" targetdir=\"$INSTALL_PATH/.djwaimport\" unpack=\"true\"/>");
+      sb.append("<file src=\"").append(escapeXML(applicationArchiveFile.getCanonicalPath())).append("\" targetdir=\"$INSTALL_PATH/.djwaimport\" unpack=\"true\"/>");
     }
     sb.append("</pack>");
     sb.append("</packs>");
@@ -423,12 +435,4 @@ public class WAPacker {
     return sb.toString();
   }
   
-  public static void main(String[] args) {
-    try {
-      new WAPacker().pack(new WAPackerConfiguration(new URL("http://javadesktop.org/swinglabs/demos/nimbus/nimbus.jnlp"), new File("C:\\eclipse\\workspace_DJ\\Installer\\resources\\install-readme.html"), new File("C:\\eclipse\\workspace_DJ\\Installer\\resources\\license.txt"), new File("nimbus-installer.jar"), null));
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-
 }

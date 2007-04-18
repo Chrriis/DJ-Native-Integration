@@ -1,4 +1,11 @@
-package chrriis.dj.wa.packer;
+/*
+ * Christopher Deckers (chrriis@nextencia.net)
+ * http://www.nextencia.net
+ * 
+ * See the file "readme.txt" for information on usage and redistribution of
+ * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ */
+package chrriis.dj.wapacker;
 
 import java.io.File;
 import java.util.Locale;
@@ -9,7 +16,7 @@ import javax.swing.filechooser.FileFilter;
 /**
  * @author Christopher Deckers
  */
-public class UIUtil {
+public class Util {
 
   protected static final FileFilter JNLP_FILE_FILTER = new FileFilter() {
     @Override
@@ -96,6 +103,20 @@ public class UIUtil {
     FILE_CHOOSER.removeChoosableFileFilter(ZIP_JAR_FILE_FILTER);
     FILE_CHOOSER.setFileFilter(TXT_HTML_FILE_FILTER);
     return FILE_CHOOSER;
+  }
+  
+  public static File getApplicationDirectory() {
+    String path = Util.class.getResource('/' + Util.class.getName().replace('.', '/') + ".class").toExternalForm();
+    if(path.startsWith("jar:file:/")) {
+      path = path.substring("jar:file:/".length());
+      path = path.substring(0, path.indexOf("!"));
+      File dir = new File(path).getParentFile();
+      if(dir.exists() && dir.isDirectory()) {
+        System.err.println(dir.getAbsolutePath());
+        return dir;
+      }
+    }
+    return new File(".");
   }
   
 }

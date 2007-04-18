@@ -1,4 +1,11 @@
-package chrriis.dj.wa.packer;
+/*
+ * Christopher Deckers (chrriis@nextencia.net)
+ * http://www.nextencia.net
+ * 
+ * See the file "readme.txt" for information on usage and redistribution of
+ * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ */
+package chrriis.dj.wapacker;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -122,7 +129,7 @@ public class WAPackerFrame extends JFrame {
     jnlpDescriptorButton = new JButton("...");
     jnlpDescriptorButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = UIUtil.getJnlpFileChooser();
+        JFileChooser fileChooser = Util.getJnlpFileChooser();
         if(fileChooser.showOpenDialog(WAPackerFrame.this) == JFileChooser.APPROVE_OPTION) {
           jnlpDescriptorTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
           jnlpDescriptorTextField.setCaretPosition(0);
@@ -135,7 +142,7 @@ public class WAPackerFrame extends JFrame {
     outputJarFileButton = new JButton("...");
     outputJarFileButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = UIUtil.getJarFileChooser();
+        JFileChooser fileChooser = Util.getJarFileChooser();
         if(fileChooser.showOpenDialog(WAPackerFrame.this) == JFileChooser.APPROVE_OPTION) {
           outputJarFileTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
           outputJarFileTextField.setCaretPosition(0);
@@ -149,7 +156,7 @@ public class WAPackerFrame extends JFrame {
     readmeFileButton = new JButton("...");
     readmeFileButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = UIUtil.getTextHtmlFileChooser();
+        JFileChooser fileChooser = Util.getTextHtmlFileChooser();
         if(fileChooser.showOpenDialog(WAPackerFrame.this) == JFileChooser.APPROVE_OPTION) {
           readmeFileTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
           readmeFileTextField.setCaretPosition(0);
@@ -163,7 +170,7 @@ public class WAPackerFrame extends JFrame {
     licenseFileButton = new JButton("...");
     licenseFileButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = UIUtil.getTextHtmlFileChooser();
+        JFileChooser fileChooser = Util.getTextHtmlFileChooser();
         if(fileChooser.showOpenDialog(WAPackerFrame.this) == JFileChooser.APPROVE_OPTION) {
           licenseFileTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
           licenseFileTextField.setCaretPosition(0);
@@ -178,7 +185,7 @@ public class WAPackerFrame extends JFrame {
     applicationArchiveFileButton = new JButton("...");
     applicationArchiveFileButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = UIUtil.getZipJarFileChooser();
+        JFileChooser fileChooser = Util.getZipJarFileChooser();
         if(fileChooser.showOpenDialog(WAPackerFrame.this) == JFileChooser.APPROVE_OPTION) {
           applicationArchiveFileTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
           applicationArchiveFileTextField.setCaretPosition(0);
