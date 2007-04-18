@@ -1,0 +1,6 @@
+Here goes the izpack distribution.
+
+The directories that are needed are:
+- izpack
+  - bin
+  - lib
