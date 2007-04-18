@@ -11,13 +11,13 @@
       </manifest>
     </jar>
     <taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="${DJTweak.dir}"/>
-    <dj file="Release/DJJarExe_.jar" tofile="Release/DJJarExe.jar">
+    <djtweak file="Release/DJJarExe_.jar" tofile="Release/DJJarExe.jar">
       <icons>
         <internalset>
           <include name="chrriis/dj/jarexe/resource/DJJarExe??x??.png"/>
         </internalset>
       </icons>
-    </dj>
+    </djtweak>
     <delete file="Release/DJJarExe_.jar" />
   </target>
 
