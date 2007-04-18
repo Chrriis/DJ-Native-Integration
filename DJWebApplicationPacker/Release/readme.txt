@@ -11,18 +11,18 @@ installer for WebStart applications. The resulting application can be installed
 offline, with proper integration to the user's desktop, and benefit from the
 udate mechanism of JAva WebStart.
 
-DJ Tweak requires Java 5.0 or greater.
+DJ WebApplicationPacker requires Java 5.0 or greater.
 
 
 2. How to use it?
 
 Simply launch the graphical user interface.
 
-Alternatively, you can use DJ Tweak's Ant task. Here is an example:
+Alternatively, you can use DJ WebApplicationPacker's Ant task. Here is an
+example:
 
 <project name="Sample build script" default="createInstallerJar">
   <target name="createInstallerJar" description="Create the Installer Jar file">
-    <delete file="udoc-installer.jar"/>
     <taskdef resource="chrriis/dj/wapacker/ant/task.properties" classpath="DJWebApplicationPacker.jar"/>
     <djwapacker jnlpurl="http://udoc.sf.net/UDoc.jnlp"
                 readmefile="readme.html"
