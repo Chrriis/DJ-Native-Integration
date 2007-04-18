@@ -112,7 +112,6 @@ public class Util {
       path = path.substring(0, path.indexOf("!"));
       File dir = new File(path).getParentFile();
       if(dir.exists() && dir.isDirectory()) {
-        System.err.println(dir.getAbsolutePath());
         return dir;
       }
     }

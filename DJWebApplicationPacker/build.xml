@@ -6,7 +6,7 @@
 		<jar duplicate="preserve" destfile="Release/DJWebApplicationPacker.jar">
 			<fileset dir="bin"/>
 			<manifest>
-				<attribute name="Main-Class" value="chrriis.dj.wa.packer.WAPackerFrame"/>
+				<attribute name="Main-Class" value="chrriis.dj.wapacker.WAPackerFrame"/>
 				<attribute name="Class-Path" value="lib/izpack/lib/standalone-compiler-reduced.jar lib/izpack/lib/izevent.jar"/>
 			</manifest>
 		</jar>
