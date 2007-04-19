@@ -174,10 +174,10 @@ public class WSLinkGenerator {
     if(images.length == 0) {
       try {
         images = new BufferedImage[] {
-            ImageIO.read(getClass().getResourceAsStream("resource/WSLink48x48x32.png")),
-            ImageIO.read(getClass().getResourceAsStream("resource/WSLink32x32x32.png")),
-            ImageIO.read(getClass().getResourceAsStream("resource/WSLink24x24x32.png")),
-            ImageIO.read(getClass().getResourceAsStream("resource/WSLink16x16x32.png")),
+            ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon16x16.png")),
+            ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon24x24.png")),
+            ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon32x32.png")),
+            ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon48x48.png")),
         };
       } catch(Exception e) {
         e.printStackTrace();
