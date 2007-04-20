@@ -178,6 +178,7 @@ public class WSLinkGenerator {
             ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon24x24.png")),
             ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon32x32.png")),
             ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon48x48.png")),
+            ImageIO.read(getClass().getResourceAsStream("resource/WebApplicationIcon256x256.png")),
         };
       } catch(Exception e) {
         e.printStackTrace();
