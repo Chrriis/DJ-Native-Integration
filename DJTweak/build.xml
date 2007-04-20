@@ -14,6 +14,7 @@
       <icons>
         <internalset>
           <include name="chrriis/dj/tweak/ui/resource/DJTweak??x??.png"/>
+          <include name="chrriis/dj/tweak/ui/resource/DJTweak256x256.png"/>
         </internalset>
         <!--externalset dir="icons">
           <include name="**/*.*"/>
