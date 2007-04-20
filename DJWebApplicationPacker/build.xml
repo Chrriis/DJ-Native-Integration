@@ -12,7 +12,7 @@
 		</jar>
     <!--mkdir dir="Release/lib/izpack/lib"/-->
     <copy file="lib/izpack/lib/izevent.jar" todir="Release/lib/izpack/lib"/>
-    <copy file="lib/izpack/bin/customActions/RegistryUninstallerListener.jar" todir="Release/lib/izpack/bin/customActions"/>
+    <!--copy file="lib/izpack/bin/customActions/RegistryUninstallerListener.jar" todir="Release/lib/izpack/bin/customActions"/-->
     <jar destfile="Release/lib/izpack/lib/standalone-compiler-reduced.jar">
       <zipfileset src="lib/izpack/lib/standalone-compiler.jar">
         <exclude name="org/apache/tools/ant/**/*.*"/>
@@ -25,6 +25,7 @@
         <exclude name="com/izforge/izpack/ant/**.*"/>
         <exclude name="bin/customActions/**.*"/>
         <exclude name="bin/panels/**.*"/>
+        <exclude name="bin/native/3rdparty/**.*"/>
         <exclude name="images/**.*"/>
       </zipfileset>
       <zipfileset src="lib/izpack/lib/standalone-compiler.jar">

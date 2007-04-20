@@ -342,7 +342,7 @@ public class WAPacker {
     sb.append("<panel classname=\"ShortcutPanel\"/>");
     sb.append("<panel classname=\"SimpleFinishPanel\"/>");
     sb.append("</panels>");
-    sb.append("<jar src=\"").append(escapeXML(new File(IZPACK_HOME_DIR, "bin/customActions/RegistryUninstallerListener.jar").getCanonicalPath())).append("\" stage=\"install\"/>");
+//    sb.append("<jar src=\"").append(escapeXML(new File(IZPACK_HOME_DIR, "bin/customActions/RegistryUninstallerListener.jar").getCanonicalPath())).append("\" stage=\"install\"/>");
     sb.append("<jar src=\"").append(escapeXML(new File(IZPACK_HOME_DIR, "lib/izevent.jar").getCanonicalPath())).append("\" stage=\"uninstall\"/>");
     sb.append("<listeners>");
     sb.append("<listener uninstaller=\"UninstallWSUninstallerListener\">");
@@ -373,9 +373,9 @@ public class WAPacker {
     sb.append("<native type=\"izpack\" name=\"ShellLink.dll\">");
     sb.append("<os family=\"windows\"/>");
     sb.append("</native>");
-    sb.append("<native type=\"3rdparty\" name=\"COIOSHelper.dll\" stage=\"install\">");
-    sb.append("<os family=\"windows\"/>");
-    sb.append("</native>");
+//    sb.append("<native type=\"3rdparty\" name=\"COIOSHelper.dll\" stage=\"install\">");
+//    sb.append("<os family=\"windows\"/>");
+//    sb.append("</native>");
     sb.append("</installation>");
     try {
       BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(xmlFile));
