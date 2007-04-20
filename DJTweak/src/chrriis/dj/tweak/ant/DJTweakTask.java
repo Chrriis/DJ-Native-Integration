@@ -54,9 +54,9 @@ public class DJTweakTask extends Task {
     if(toFile == null) {
       throw new BuildException("The \"tofile\" attribute is mandatory!");
     }
-    if(toFile.exists()) {
-      throw new BuildException("The target file must not exist!");
-    }
+//    if(toFile.exists()) {
+//      throw new BuildException("The target file must not exist!");
+//    }
     System.out.println("Loading jar: " + fromFile.getPath());
     JarFileInfo jarfileInfo = JarFileInfo.getJarfileInfo(fromFile);
     IconInfo[] iconInfos = jarfileInfo.getIconInfos();
