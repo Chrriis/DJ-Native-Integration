@@ -50,7 +50,8 @@ public class Icons {
   public IconInfo[] getIconInfo(Project project, JarFileInfo jarfileInfo) throws IOException {
     List<IconInfo> iconInfoList = new ArrayList<IconInfo>();
     if(patternSetList != null && !patternSetList.isEmpty()) {
-      for(Enumeration<JarEntry> en=new JarFile(jarfileInfo.getSourceFile()).entries(); en.hasMoreElements(); ) {
+      JarFile jarFile = new JarFile(jarfileInfo.getSourceFile());
+      for(Enumeration<JarEntry> en=jarFile.entries(); en.hasMoreElements(); ) {
         String entryName = en.nextElement().getName();
         if(isIncluded(project, entryName)) {
           System.out.println("Adding internal image: " + entryName);
@@ -69,6 +70,7 @@ public class Icons {
           iconInfoList.add(new IconInfo(size.width, size.height, entryName, null));
         }
       }
+      jarFile.close();
     }
     for(FileSet fileSet: fileSetList) {
       DirectoryScanner ds = fileSet.getDirectoryScanner(project);

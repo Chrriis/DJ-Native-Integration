@@ -242,7 +242,9 @@ public class JarExe {
   protected static String[] getVMArgs(File jarFile) {
     try {
       StringBuilder sb = new StringBuilder();
-      Manifest manifest = new JarFile(jarFile).getManifest();
+      JarFile jarFile_ = new JarFile(jarFile);
+      Manifest manifest = jarFile_.getManifest();
+      jarFile_.close();
       Attributes attributes = manifest.getMainAttributes();
       for(Object key: attributes.keySet()) {
         Attributes.Name name = (Attributes.Name)key;
