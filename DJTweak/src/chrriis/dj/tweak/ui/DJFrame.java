@@ -41,6 +41,7 @@ public class DJFrame extends JFrame {
           new ImageIcon(getClass().getResource("resource/DJTweak24x24.png")).getImage(),
           new ImageIcon(getClass().getResource("resource/DJTweak32x32.png")).getImage(),
           new ImageIcon(getClass().getResource("resource/DJTweak48x48.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/DJTweak256x256.png")).getImage(),
       }));
     } else {
       setIconImage(new ImageIcon(getClass().getResource("resource/DJTweak32x32Plain.png")).getImage());

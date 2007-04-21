@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,8 +19,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -53,7 +56,18 @@ public class WAPackerFrame extends JFrame {
   protected JButton generateButton;
   
   public WAPackerFrame() {
-    super("DJ Web-Application Packer");
+    super("DJ WebApplication Packer");
+    if(System.getProperty("java.version").compareTo("1.6") >= 0) {
+      setIconImages(Arrays.asList(new Image[] {
+          new ImageIcon(getClass().getResource("resource/WebApplicationPackerIcon16x16.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/WebApplicationPackerIcon24x24.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/WebApplicationPackerIcon32x32.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/WebApplicationPackerIcon48x48.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/WebApplicationPackerIcon256x256.png")).getImage(),
+      }));
+    } else {
+      setIconImage(new ImageIcon(getClass().getResource("resource/WebApplicationPackerIcon32x32Plain.png")).getImage());
+    }
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     JPanel contentPane = new JPanel(new BorderLayout(0, 0));
     final JPanel centerPanel = new JPanel(new BorderLayout(0, 0));

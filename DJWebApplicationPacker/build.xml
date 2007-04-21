@@ -14,8 +14,8 @@
     <djtweak file="Release/DJWebApplicationPacker.jar" tofile="Release/DJWebApplicationPacker.jar">
       <icons>
         <internalset>
-          <include name="chrriis/dj/wapacker/wslink/resource/WebApplicationIcon??x??.png"/>
-          <include name="chrriis/dj/wapacker/wslink/resource/WebApplicationIcon256x256.png"/>
+          <include name="chrriis/dj/wapacker/resource/WebApplicationPackerIcon??x??.png"/>
+          <include name="chrriis/dj/wapacker/resource/WebApplicationPackerIcon256x256.png"/>
         </internalset>
       </icons>
     </djtweak>
