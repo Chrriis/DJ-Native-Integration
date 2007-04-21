@@ -13,8 +13,8 @@
     <djtweak file="Release/DJLib.jar" tofile="Release/DJTweak.jar">
       <icons>
         <internalset>
-          <include name="chrriis/dj/tweak/ui/resource/DJTweak??x??.png"/>
-          <include name="chrriis/dj/tweak/ui/resource/DJTweak256x256.png"/>
+          <include name="chrriis/dj/tweak/ui/resource/TweakIcon??x??.png"/>
+          <include name="chrriis/dj/tweak/ui/resource/TweakIcon256x256.png"/>
         </internalset>
         <!--externalset dir="icons">
           <include name="**/*.*"/>

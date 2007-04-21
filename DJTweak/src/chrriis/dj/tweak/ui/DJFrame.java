@@ -37,14 +37,14 @@ public class DJFrame extends JFrame {
     super("DJ Tweak");
     if(System.getProperty("java.version").compareTo("1.6") >= 0) {
       setIconImages(Arrays.asList(new Image[] {
-          new ImageIcon(getClass().getResource("resource/DJTweak16x16.png")).getImage(),
-          new ImageIcon(getClass().getResource("resource/DJTweak24x24.png")).getImage(),
-          new ImageIcon(getClass().getResource("resource/DJTweak32x32.png")).getImage(),
-          new ImageIcon(getClass().getResource("resource/DJTweak48x48.png")).getImage(),
-          new ImageIcon(getClass().getResource("resource/DJTweak256x256.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/TweakIcon16x16.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/TweakIcon24x24.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/TweakIcon32x32.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/TweakIcon48x48.png")).getImage(),
+          new ImageIcon(getClass().getResource("resource/TweakIcon256x256.png")).getImage(),
       }));
     } else {
-      setIconImage(new ImageIcon(getClass().getResource("resource/DJTweak32x32Plain.png")).getImage());
+      setIconImage(new ImageIcon(getClass().getResource("resource/TweakIcon32x32Plain.png")).getImage());
     }
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     final DJPane djPane = new DJPane();

@@ -31,7 +31,7 @@ public class AboutDialog extends JDialog {
     setResizable(false);
     JPanel contentPane = new JPanel(new BorderLayout(0, 0));
     contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    contentPane.add(new JLabel(new ImageIcon(getClass().getResource("resource/DJTweak200x200.png"))), BorderLayout.WEST);
+    contentPane.add(new JLabel(new ImageIcon(getClass().getResource("resource/DJIcon200x200.png"))), BorderLayout.WEST);
     JEditorPane editorPane = new JEditorPane("text/html", 
         "<html><head><style>body{font:Sans-Serif}</style></head>" +
         "<h1>The DJ Project<br>" +

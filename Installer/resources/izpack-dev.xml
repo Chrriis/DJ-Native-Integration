@@ -66,7 +66,7 @@
       <description>Base files.</description>
       <file src="Release/readme.txt" targetdir="$INSTALL_PATH"/>
       <file src="resources/license.txt" targetdir="$INSTALL_PATH"/>
-      <file src="resources/DJ.ico" targetdir="$INSTALL_PATH" os="windows"/>
+      <file src="resources/DJIcon.ico" targetdir="$INSTALL_PATH" os="windows"/>
     </pack>
     <pack name="DJ ShellExtension" required="no">
       <os family="windows"/>
