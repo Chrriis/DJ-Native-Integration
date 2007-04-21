@@ -158,7 +158,7 @@ void JarReader::loadManifest()
         }
         if (nstr[0] == ' ') {
             if (manifest.find(lastKey) != manifest.end()) {
-                (*manifest.find(lastKey)).second += str.substr(1);
+                (*manifest.find(lastKey)).second += str;
             }
             continue;
         }

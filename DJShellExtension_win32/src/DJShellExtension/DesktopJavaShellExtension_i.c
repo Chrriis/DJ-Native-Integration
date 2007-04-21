@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Fri Apr 20 19:49:56 2007
+/* at Sat Apr 21 21:11:06 2007
  */
 /* Compiler settings for .\DesktopJavaShellExtension.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
