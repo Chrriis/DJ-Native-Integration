@@ -9,7 +9,7 @@ Licence terms: GPL v2 (see licence.txt)
 DJ WebApplicationPacker is part of the DJ tool set. It allows to create an
 installer for WebStart applications. The resulting application can be installed
 offline, with proper integration to the user's desktop, and benefit from the
-udate mechanism of JAva WebStart.
+udate mechanism of Java WebStart.
 
 DJ WebApplicationPacker requires Java 5.0 or greater.
 
@@ -17,6 +17,10 @@ DJ WebApplicationPacker requires Java 5.0 or greater.
 2. How to use it?
 
 Simply launch the graphical user interface.
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+If you are behind a proxy and want to access a JNLP file from a URL, you need to
+launch the application from a shell:
+java -Dhttp.useProxy=true -Dhttp.proxyHost=123.123.123.123 -Dhttp.proxyPort=80 -jar DJWebApplicationPacker.jar
 
 Alternatively, you can use DJ WebApplicationPacker's Ant task. Here is an
 example:
