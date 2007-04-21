@@ -28,7 +28,8 @@
       <fileset dir="bin" includes="chrriis/dj/installer/shellextension/**/*.*"/>
     </jar>
     <taskdef name="izpack" classpath="${IzPack.dir}\lib\compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
-    <izpack input="resources/izpack.xml" output="Release/DJProjectSetup-win32.jar" installerType="standard" basedir="." izPackDir="${IzPack.dir}/"/>
+    <izpack input="resources/izpack-dev.xml" output="Release/DJProjectSetup-dev-win32.jar" installerType="standard" basedir="." izPackDir="${IzPack.dir}/"/>
+    <izpack input="resources/izpack-user.xml" output="Release/DJProjectSetup-win32.jar" installerType="standard" basedir="." izPackDir="${IzPack.dir}/"/>
     <delete file="${IzPack.dir}/bin/customActions/UninstallInstallerListener.jar"/>
     <delete file="${IzPack.dir}/bin/customActions/DJJarExeInstallerListener.jar"/>
     <delete file="${IzPack.dir}/bin/customActions/DJJarExeUninstallerListener.jar"/>

@@ -29,10 +29,10 @@
   </locale>
   <resources>
     <res id="Heading.image" src="resources/DJ64x56.png"/>
-    <res id="HTMLInfoPanel.info" src="resources/install-readme.html"/>
+    <res id="HTMLInfoPanel.info" src="resources/install-readme-user.html"/>
     <res id="LicencePanel.licence" src="resources/license.txt"/>
     <res id="RegistrySpec.xml" src="resources/RegistrySpec.xml"/>
-    <res id="shortcutSpec.xml" src="resources/ShortcutSpec.xml"/>
+    <!--res id="shortcutSpec.xml" src="resources/ShortcutSpec-user.xml"/-->
     <res id="CustomLangpack.xml_eng" src="resources/CustomLangpack_eng.xml"/>
     <res id="customicons.xml" src="resources/CustomIcons.xml"/>
     <res id="DJFrameIcon.png" src="resources/DJInstall32x32.png"/>
@@ -44,7 +44,7 @@
     <panel classname="PacksPanel"/>
     <panel classname="TargetPanel"/>
     <panel classname="InstallPanel"/>
-    <panel classname="ShortcutPanel"/>
+    <!--panel classname="ShortcutPanel"/-->
     <panel classname="SimpleFinishPanel"/>
   </panels>
   <listeners>
@@ -82,16 +82,10 @@
       <file src="../DJJarExe_win32/Release/readme.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>
       <file src="../DJJarExe_win32/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>
     </pack>
-    <pack name="DJ Tweak" required="no">
-      <description>Utility to tweak Jar files. It allows to change their icon, or to specify some VM arguments to use when they are launched. This is both a graphical tool and an Ant task.</description>
-      <file src="../DJTweak/Release/DJTweak.jar" targetdir="$INSTALL_PATH/DJ Tweak"/>
-      <file src="../DJTweak/Release/readme.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>
-      <file src="../DJTweak/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>
-    </pack>
   </packs>
-  <native type="izpack" name="ShellLink.dll">
+  <!--native type="izpack" name="ShellLink.dll">
     <os family="windows"/>
-  </native>
+  </native-->
   <native type="3rdparty" name="COIOSHelper.dll" stage="both">
     <os family="windows"/>
   </native>
