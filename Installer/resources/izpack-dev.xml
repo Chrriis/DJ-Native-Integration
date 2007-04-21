@@ -12,7 +12,7 @@
     </authors>
     <url>http://djproject.sourceforge.net</url>
   </info>
-  <guiprefs width="550" height="400" resizable="yes">
+  <guiprefs width="550" height="430" resizable="yes">
     <modifier key="useLabelIcons" value="no"/>
     <modifier key="useHeadingPanel" value="yes"/>
     <modifier key="headingLineCount" value="1"/>
@@ -87,6 +87,13 @@
       <file src="../DJTweak/Release/DJTweak.jar" targetdir="$INSTALL_PATH/DJ Tweak"/>
       <file src="../DJTweak/Release/readme.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>
       <file src="../DJTweak/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ Tweak"/>
+    </pack>
+    <pack name="DJ WebApplication Packer" required="no">
+      <description>Utility to create WebApplication installers. A Web Application is an an application that benefits from WebStart's updated mechanism but that is properly integrated to the operating system and that can pre-install a version for offline users.</description>
+      <file src="../DJWebApplicationPacker/Release/DJWebApplicationPacker.jar" targetdir="$INSTALL_PATH/DJ WebApplicationPacker"/>
+      <file src="../DJWebApplicationPacker/Release/readme.txt" targetdir="$INSTALL_PATH/DJ WebApplicationPacker"/>
+      <file src="../DJWebApplicationPacker/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ WebApplicationPacker"/>
+      <file src="../DJWebApplicationPacker/Release/lib" targetdir="$INSTALL_PATH/DJ WebApplicationPacker"/>
     </pack>
   </packs>
   <native type="izpack" name="ShellLink.dll">

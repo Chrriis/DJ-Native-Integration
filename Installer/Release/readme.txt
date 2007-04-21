@@ -20,11 +20,19 @@ The DJ Project brings:
   the task manager, and have a proper task bar aggregation per program.
 - Configuration of the default Virtual Machine arguments that an executable Jar
   file should use. Multiple sets of arguments can be defined to allow per vendor and/or runtime version configuration.
-- The Tweak utility, to customize all the aspects described above, using its Ant
   task or its graphical user interface.
 - An "Open in Shell" command in the contextual menu of a Jar file to launch it
   from a visible shell.
 - A view of the manifest attributes of a Jar file from its properties.
+
+Additionaly, the DJ Project (developer version) contains the following
+development tools:
+- The Tweak utility, to customize all the aspects described above, using its Ant
+  task or its graphical user interface.
+- The WebApplication Packer tool (user-interface and Ant task), to create an
+  installer for WebStart-based applications. The resulting installer properly
+  integrates the application to the operating system and can pre-install a
+  version for offline users.
 
 2. How to use it?
 
