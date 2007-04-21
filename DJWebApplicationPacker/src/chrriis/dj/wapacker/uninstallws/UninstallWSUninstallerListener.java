@@ -24,7 +24,7 @@ public class UninstallWSUninstallerListener extends SimpleUninstallerListener {
   @SuppressWarnings("unchecked")
   @Override
   public void beforeDeletion(List files, AbstractUIProgressHandler abstractUIProgressHandler) throws Exception {
-    if(System.getProperty("java.version").compareTo("1.6") >= 0) {
+    if(System.getProperty("java.version").compareTo("1.5") >= 0) {
       for(int i=files.size()-1; i>=0; i--) {
         File file = (File)files.get(i);
         JarFile jarFile = null;
