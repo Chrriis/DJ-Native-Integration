@@ -20,6 +20,19 @@
    </shortcut>
 
    <shortcut
+     name="DJ WebApplication Packer"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\DJ WebApplicationPacker\DJWebApplicationPacker.jar"
+     commandLine=""
+     description="The WebApplication Packer tool, to generate installers for WebStart-based applications">
+     <createForPack name="DJ WebApplication Packer"/>
+   </shortcut>
+
+   <shortcut
      name="Read Me"
      programGroup="yes"
      desktop="no"
