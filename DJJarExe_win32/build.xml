@@ -4,21 +4,20 @@
 
   <target name="createJar" description="Create the Jar files">
     <delete file="Release/DJJarExe.jar" />
-    <jar duplicate="preserve" destfile="Release/DJJarExe_.jar">
+    <jar duplicate="preserve" destfile="Release/DJJarExe.jar">
       <fileset dir="bin"/>
       <manifest>
         <attribute name="Main-Class" value="chrriis.dj.jarexe.JarExe"/>
       </manifest>
     </jar>
-    <taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="${DJTweak.dir}"/>
-    <djtweak file="Release/DJJarExe_.jar" tofile="Release/DJJarExe.jar">
+    <!--taskdef resource="chrriis/dj/tweak/ant/task.properties" classpath="${DJTweak.dir}"/>
+    <djtweak file="Release/DJJarExe.jar" tofile="Release/DJJarExe.jar">
       <icons>
         <internalset>
           <include name="chrriis/dj/jarexe/resource/DJJarExe??x??.png"/>
         </internalset>
       </icons>
-    </djtweak>
-    <delete file="Release/DJJarExe_.jar" />
+    </djtweak-->
   </target>
 
 </project>
