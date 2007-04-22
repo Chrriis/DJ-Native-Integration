@@ -14,8 +14,6 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -23,9 +21,6 @@ import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
 /**
@@ -87,41 +82,6 @@ public class DJFrame extends JFrame {
         return fileList.get(0).getName().toLowerCase(Locale.ENGLISH).endsWith(".jar");
       }
     }));
-    JMenuBar menuBar = new JMenuBar();
-    JMenu fileMenu = new JMenu("File");
-    fileMenu.setMnemonic('F');
-    JMenuItem fileOpenMenuItem = new JMenuItem("Open...");
-    fileOpenMenuItem.setMnemonic('O');
-    fileOpenMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        djPane.openJarChooser();
-      }
-    });
-    fileMenu.add(fileOpenMenuItem);
-    fileMenu.addSeparator();
-    JMenuItem fileExitMenuItem = new JMenuItem("Exit");
-    fileExitMenuItem.setMnemonic('x');
-    fileExitMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        System.exit(0);
-      }
-    });
-    fileMenu.add(fileExitMenuItem);
-    menuBar.add(fileMenu);
-    JMenu helpMenu = new JMenu("Help");
-    helpMenu.setMnemonic('H');
-    JMenuItem helpAboutMenuItem = new JMenuItem("About");
-    helpAboutMenuItem.setMnemonic('A');
-    helpAboutMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        AboutDialog aboutDialog = new AboutDialog(DJFrame.this);
-        aboutDialog.setLocationRelativeTo(DJFrame.this);
-        aboutDialog.setVisible(true);
-      }
-    });
-    helpMenu.add(helpAboutMenuItem);
-    menuBar.add(helpMenu);
-    setJMenuBar(menuBar);
     getContentPane().add(djPane, BorderLayout.CENTER);
     setSize(600, 400);
     setLocationByPlatform(true);
