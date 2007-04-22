@@ -121,13 +121,22 @@ void trim(wstring& str)
     if (str[str.length()-1]  == L'\r') {
         str.erase(str.length()-1);
     }
-  wstring::size_type pos = str.find_last_not_of(L' ');
-  if(pos != wstring::npos) {
-    str.erase(pos + 1);
-    pos = str.find_first_not_of(' ');
-    if(pos != string::npos) str.erase(0, pos);
-  }
-  else str.erase(str.begin(), str.end());
+	wstring::size_type pos = str.find_last_not_of(L' ');
+	if(pos != wstring::npos) {
+		str.erase(pos + 1);
+		pos = str.find_first_not_of(' ');
+		if(pos != string::npos) str.erase(0, pos);
+	}
+	else str.erase(str.begin(), str.end());
+}
+void removeCR(wstring& str)
+{
+    if (str.length() == 0) {
+        return;
+    } 
+    if (str[str.length()-1]  == L'\r') {
+        str.erase(str.length()-1);
+    }
 }
 void JarReader::loadManifest()
 {
@@ -152,13 +161,14 @@ void JarReader::loadManifest()
         manifestStream.getline(line,1000);        
         string nstr(line);
         wstring str(nstr.begin(),nstr.end());
-        trim(str);
+		removeCR(str);
+        //trim(str);
         if (str.length() == 0) {
             break;
         }
         if (nstr[0] == ' ') {
             if (manifest.find(lastKey) != manifest.end()) {
-                (*manifest.find(lastKey)).second += str;
+                (*manifest.find(lastKey)).second += str.substr(1);
             }
             continue;
         }
@@ -173,14 +183,19 @@ void JarReader::loadManifest()
         } else {
             val = str.substr(idx+1);
         }
+		if (val[0] == ' ') {
+			val = val.substr(1);
+		}
         trim(key);
         lastKey = key;
-        if (key.find(JAR_ICON_PREFIX,0) == 0 || key.find(MAIN_CLASS,0) == 0) {
-            if (key.find(JAR_ICON_PREFIX,0) == 0) {
-                hasOwnIcons = true;
-            }
-        }
-        trim(val);
+		if (!hasOwnIcons) {
+			if (key.find(JAR_ICON_PREFIX,0) == 0 || key.find(MAIN_CLASS,0) == 0) {
+				if (key.find(JAR_ICON_PREFIX,0) == 0) {
+					hasOwnIcons = true;
+				}
+			}
+		}
+        //trim(val);
         manifest.insert(pair<wstring,wstring>(key,val));
     }
 }

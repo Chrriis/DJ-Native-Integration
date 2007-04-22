@@ -9,7 +9,7 @@ Licence terms: GPL v2 (see licence.txt)
 * Version 1.0.0.2 (xxxxxxxxxxxxxx):
 
 - Nasty bug regarding wrong memory size being allocated is fixed.
-- Fixed manifest multi-line values that were missing their first char.
+- Fixed manifest multi-line values that were missing some characters.
 - Icons are defined with their full path, with or without a preceding '/'.
 - Icons were hidden in the manifest properties, but they are now shown.
 - Empty main class attribute does not show the Jar as executable.
