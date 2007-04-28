@@ -337,7 +337,7 @@ public class WAPackerFrame extends JFrame {
           File outputJarFile = new File(outputJarFileText);
           WAPackerConfiguration wsPackerConfiguration = new WAPackerConfiguration(jnlpURL, outputJarFile, readmeFile, licenseFile, applicationArchiveFile);
           new WAPacker().pack(wsPackerConfiguration);
-          message = "Pack generated succesfully!";
+          message = "Installer generated succesfully!";
         } catch(Throwable t) {
           t.printStackTrace();
           message = t.getMessage();
