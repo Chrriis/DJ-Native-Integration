@@ -17,7 +17,7 @@ DJ WebApplicationPacker requires Java 5.0 or greater.
 2. How to use it?
 
 Simply launch the graphical user interface.
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
+
 If you are behind a proxy and want to access a JNLP file from a URL, you need to
 launch the application from a shell:
 java -Dhttp.useProxy=true -Dhttp.proxyHost=123.123.123.123 -Dhttp.proxyPort=80 -jar DJWebApplicationPacker.jar
