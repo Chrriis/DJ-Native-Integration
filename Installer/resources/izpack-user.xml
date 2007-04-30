@@ -77,7 +77,7 @@
     </pack>
     <pack name="DJ JarExe" required="no">
       <os family="windows"/>
-      <description>Extension to make executable Jar files different processes, identifiable in the task manager. It also adds the ability to launch the Jar file from a shell, accessible from the Jar file's context menu.</description>
+      <description>Extension to make executable Jar files different processes, identifiable in the task manager. It also allows to launch Jar files using a shell, from their context menu.</description>
       <file src="../DJJarExe_win32/Release/DJJarExe.jar" targetdir="$INSTALL_PATH/DJ JarExe"/>
       <file src="../DJJarExe_win32/Release/readme.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>
       <file src="../DJJarExe_win32/Release/changelog.txt" targetdir="$INSTALL_PATH/DJ JarExe"/>

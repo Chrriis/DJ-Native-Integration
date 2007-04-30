@@ -6,7 +6,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 ---------------------------------- Change log ----------------------------------
 
-* Version 1.0.0.2 (xxxxxxxxxxxxxx):
+* Version 1.0.0.2 (April 30, 2007):
 
 - Nasty bug regarding wrong memory size being allocated is fixed.
 - Fixed manifest multi-line values that were missing some characters.

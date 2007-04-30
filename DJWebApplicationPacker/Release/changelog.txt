@@ -5,6 +5,6 @@ Licence terms: GPL v2 (see licence.txt)
 
 ---------------------------------- Change log ----------------------------------
 
-* Version 1.001 (xxxxxxxxxxxxxx):
+* Version 1.001 (April 30, 2007):
 
 - Initial release, with working packaging and installation mechanisms.

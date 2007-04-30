@@ -5,7 +5,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 ---------------------------------- Change log ----------------------------------
 
-* Version 1.002 (xxxxxxxxxxxxxx):
+* Version 1.002 (April 30, 2007):
 
 - Non editable signed JAR file is now indicated on the interface.
 - Saving a JAR that did not have a manifest was not adding it properly.

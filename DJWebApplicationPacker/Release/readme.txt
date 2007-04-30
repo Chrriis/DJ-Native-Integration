@@ -4,14 +4,15 @@ Christopher Deckers (chrriis@nextencia.net)
 Licence terms: GPL v2 (see licence.txt)
 
 
-1. What is DJ WebApplicationPacker?
+1. What is DJ WebApplication Packer?
 
-DJ WebApplicationPacker is part of the DJ tool set. It allows to create an
+DJ WebApplication Packer is part of the DJ tool set. It allows to create an
 installer for WebStart applications. The resulting application can be installed
 offline, with proper integration to the user's desktop, and benefit from the
 udate mechanism of Java WebStart.
+DJ WebApplication Packer is using a subset of the IzPack installer.
 
-DJ WebApplicationPacker requires Java 5.0 or greater.
+DJ WebApplication Packer requires Java 5.0 or greater.
 
 
 2. How to use it?
@@ -22,7 +23,7 @@ If you are behind a proxy and want to access a JNLP file from a URL, you need to
 launch the application from a shell:
 java -Dhttp.useProxy=true -Dhttp.proxyHost=123.123.123.123 -Dhttp.proxyPort=80 -jar DJWebApplicationPacker.jar
 
-Alternatively, you can use DJ WebApplicationPacker's Ant task. Here is an
+Alternatively, you can use DJ WebApplication Packer's Ant task. Here is an
 example:
 
 <project name="Sample build script" default="createInstallerJar">

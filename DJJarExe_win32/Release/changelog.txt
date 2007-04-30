@@ -5,7 +5,7 @@ Licence terms: GPL v2 (see licence.txt)
 
 ---------------------------------- Change log ----------------------------------
 
-* Version 1.001 (xxxxxxxxxxxxx):
+* Version 1.001 (April 30, 2007):
 
 - VM args can be read from the JAR file.
 - Jar files are executed as different processes.
